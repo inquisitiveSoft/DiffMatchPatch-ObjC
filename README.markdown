@@ -1,9 +1,8 @@
 Diff, Match and Patch Library, Objective C port
 ===============================================
 
-<http://code.google.com/p/google-diff-match-patch/>
+A rather enthusiastic refactoring of Jan Weiß's Objective-C port of Neil Fraser's [http://code.google.com/p/google-diff-match-patch/](Diff Match and Patch).
 
-Notes
------
+In the process of making it ARC friendly and tinkering to my internal Objective-C style I ended up reformatting to the extent that it's become a C interface which uses Objective-C objects. While I think it's rather streamlined as is, all the clever bits were done by others.
 
-If you want to run the speed test, you first need to change the working directory of the executable “speedtest” to “Project directory”. This cannot be done beforehand, because this setting is stored in the current user’s project settings. 
+**ToDo:** Reintroduce tests
