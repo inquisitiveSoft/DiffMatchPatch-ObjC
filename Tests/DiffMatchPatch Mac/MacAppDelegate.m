@@ -6,9 +6,9 @@
 //
 //
 
-#import "AppDelegate.h"
+#import "MacAppDelegate.h"
 
-@implementation AppDelegate
+@implementation MacAppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
