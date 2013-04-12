@@ -1,0 +1,560 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4A4B55E51718B17F0050A4F2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4B55AC1718B09B0050A4F2 /* Cocoa.framework */; };
+		4A4B55FE1718B17F0050A4F2 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4B55CA1718B09C0050A4F2 /* SenTestingKit.framework */; };
+		4A4B55FF1718B17F0050A4F2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4B55AC1718B09B0050A4F2 /* Cocoa.framework */; };
+		4A4B56141718B5010050A4F2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56131718B5010050A4F2 /* AppDelegate.m */; };
+		4A4B56171718B50A0050A4F2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A4B56151718B50A0050A4F2 /* MainMenu.xib */; };
+		4A4B561C1718B5140050A4F2 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4A4B56181718B5140050A4F2 /* Credits.rtf */; };
+		4A4B561D1718B5140050A4F2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4A4B561A1718B5140050A4F2 /* InfoPlist.strings */; };
+		4A4B56201718B5370050A4F2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B561F1718B5370050A4F2 /* main.m */; };
+		4A4B56261718B59A0050A4F2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4A4B56241718B59A0050A4F2 /* InfoPlist.strings */; };
+		4A4B56291718B5E70050A4F2 /* DiffMatchPatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56281718B5E70050A4F2 /* DiffMatchPatchTests.m */; };
+		4A4B56361718B6C40050A4F2 /* DiffMatchPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B562C1718B6C40050A4F2 /* DiffMatchPatch.m */; };
+		4A4B56371718B6C40050A4F2 /* DiffMatchPatchCFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B562E1718B6C40050A4F2 /* DiffMatchPatchCFUtilities.m */; };
+		4A4B56381718B6C40050A4F2 /* DMDiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56311718B6C40050A4F2 /* DMDiff.m */; };
+		4A4B56391718B6C40050A4F2 /* DMPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56331718B6C40050A4F2 /* DMPatch.m */; };
+		4A4B563A1718B6C40050A4F2 /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56351718B6C40050A4F2 /* NSString+UriCompatibility.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4A4B56001718B17F0050A4F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A4B559F1718B0700050A4F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A4B55E31718B17F0050A4F2;
+			remoteInfo = "DiffMatchPatch Mac";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4A4B55AC1718B09B0050A4F2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4A4B55AF1718B09B0050A4F2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		4A4B55B01718B09B0050A4F2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		4A4B55B11718B09B0050A4F2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4A4B55CA1718B09C0050A4F2 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		4A4B55E41718B17F0050A4F2 /* DiffMatchPatch Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DiffMatchPatch Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4B55FD1718B17F0050A4F2 /* DiffMatchPatch Mac Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "DiffMatchPatch Mac Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4B56121718B5010050A4F2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = "Tests/DiffMatchPatch Mac/AppDelegate.h"; sourceTree = SOURCE_ROOT; };
+		4A4B56131718B5010050A4F2 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = "Tests/DiffMatchPatch Mac/AppDelegate.m"; sourceTree = SOURCE_ROOT; };
+		4A4B56161718B50A0050A4F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "Tests/DiffMatchPatch Mac/en.lproj/MainMenu.xib"; sourceTree = SOURCE_ROOT; };
+		4A4B56191718B5140050A4F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = "Tests/DiffMatchPatch Mac/en.lproj/Credits.rtf"; sourceTree = SOURCE_ROOT; };
+		4A4B561B1718B5140050A4F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Tests/DiffMatchPatch Mac/en.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		4A4B561F1718B5370050A4F2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Tests/DiffMatchPatch Mac/main.m"; sourceTree = SOURCE_ROOT; };
+		4A4B56211718B5400050A4F2 /* DiffMatchPatch Mac-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "DiffMatchPatch Mac-Prefix.pch"; path = "Tests/DiffMatchPatch Mac/DiffMatchPatch Mac-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		4A4B56221718B5900050A4F2 /* DiffMatchPatch MacTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "DiffMatchPatch MacTests-Info.plist"; path = "Tests/DiffMatchPatch Mac Tests/DiffMatchPatch MacTests-Info.plist"; sourceTree = SOURCE_ROOT; };
+		4A4B56251718B59A0050A4F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Tests/DiffMatchPatch Mac Tests/en.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		4A4B56271718B5E70050A4F2 /* DiffMatchPatchTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiffMatchPatchTests.h; path = Tests/DiffMatchPatchTests.h; sourceTree = SOURCE_ROOT; };
+		4A4B56281718B5E70050A4F2 /* DiffMatchPatchTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DiffMatchPatchTests.m; path = Tests/DiffMatchPatchTests.m; sourceTree = SOURCE_ROOT; };
+		4A4B562B1718B6C40050A4F2 /* DiffMatchPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiffMatchPatch.h; path = Source/DiffMatchPatch.h; sourceTree = "<group>"; };
+		4A4B562C1718B6C40050A4F2 /* DiffMatchPatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DiffMatchPatch.m; path = Source/DiffMatchPatch.m; sourceTree = "<group>"; };
+		4A4B562D1718B6C40050A4F2 /* DiffMatchPatchCFUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiffMatchPatchCFUtilities.h; path = Source/DiffMatchPatchCFUtilities.h; sourceTree = "<group>"; };
+		4A4B562E1718B6C40050A4F2 /* DiffMatchPatchCFUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DiffMatchPatchCFUtilities.m; path = Source/DiffMatchPatchCFUtilities.m; sourceTree = "<group>"; };
+		4A4B562F1718B6C40050A4F2 /* DiffMatchPatchInternals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiffMatchPatchInternals.h; path = Source/DiffMatchPatchInternals.h; sourceTree = "<group>"; };
+		4A4B56301718B6C40050A4F2 /* DMDiff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMDiff.h; path = Source/DMDiff.h; sourceTree = "<group>"; };
+		4A4B56311718B6C40050A4F2 /* DMDiff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMDiff.m; path = Source/DMDiff.m; sourceTree = "<group>"; };
+		4A4B56321718B6C40050A4F2 /* DMPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMPatch.h; path = Source/DMPatch.h; sourceTree = "<group>"; };
+		4A4B56331718B6C40050A4F2 /* DMPatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMPatch.m; path = Source/DMPatch.m; sourceTree = "<group>"; };
+		4A4B56341718B6C40050A4F2 /* NSString+UriCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+UriCompatibility.h"; path = "Source/NSString+UriCompatibility.h"; sourceTree = "<group>"; };
+		4A4B56351718B6C40050A4F2 /* NSString+UriCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+UriCompatibility.m"; path = "Source/NSString+UriCompatibility.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4A4B55E11718B17F0050A4F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4B55E51718B17F0050A4F2 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4B55F91718B17F0050A4F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4B55FE1718B17F0050A4F2 /* SenTestingKit.framework in Frameworks */,
+				4A4B55FF1718B17F0050A4F2 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4A4B559E1718B0700050A4F2 = {
+			isa = PBXGroup;
+			children = (
+				4A4B562A1718B6B00050A4F2 /* DiffMatchPatch Source */,
+				4A4B56111718B4C10050A4F2 /* Tests */,
+				4A4B55AB1718B09B0050A4F2 /* Frameworks */,
+				4A4B55AA1718B09B0050A4F2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4A4B55AA1718B09B0050A4F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B55E41718B17F0050A4F2 /* DiffMatchPatch Mac.app */,
+				4A4B55FD1718B17F0050A4F2 /* DiffMatchPatch Mac Tests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4A4B55AB1718B09B0050A4F2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B55AC1718B09B0050A4F2 /* Cocoa.framework */,
+				4A4B55CA1718B09C0050A4F2 /* SenTestingKit.framework */,
+				4A4B55AE1718B09B0050A4F2 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4A4B55AE1718B09B0050A4F2 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B55AF1718B09B0050A4F2 /* AppKit.framework */,
+				4A4B55B01718B09B0050A4F2 /* CoreData.framework */,
+				4A4B55B11718B09B0050A4F2 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		4A4B55E61718B17F0050A4F2 /* DiffMatchPatch Mac */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B56121718B5010050A4F2 /* AppDelegate.h */,
+				4A4B56131718B5010050A4F2 /* AppDelegate.m */,
+				4A4B56151718B50A0050A4F2 /* MainMenu.xib */,
+				4A4B55E71718B17F0050A4F2 /* Supporting Files */,
+			);
+			path = "DiffMatchPatch Mac";
+			sourceTree = "<group>";
+		};
+		4A4B55E71718B17F0050A4F2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B56181718B5140050A4F2 /* Credits.rtf */,
+				4A4B561A1718B5140050A4F2 /* InfoPlist.strings */,
+				4A4B56211718B5400050A4F2 /* DiffMatchPatch Mac-Prefix.pch */,
+				4A4B561F1718B5370050A4F2 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4A4B56021718B17F0050A4F2 /* DiffMatchPatch Mac Tests */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B56271718B5E70050A4F2 /* DiffMatchPatchTests.h */,
+				4A4B56281718B5E70050A4F2 /* DiffMatchPatchTests.m */,
+				4A4B56031718B17F0050A4F2 /* Supporting Files */,
+			);
+			name = "DiffMatchPatch Mac Tests";
+			path = "DiffMatchPatch MacTests";
+			sourceTree = "<group>";
+		};
+		4A4B56031718B17F0050A4F2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B56221718B5900050A4F2 /* DiffMatchPatch MacTests-Info.plist */,
+				4A4B56241718B59A0050A4F2 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4A4B56111718B4C10050A4F2 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B55E61718B17F0050A4F2 /* DiffMatchPatch Mac */,
+				4A4B56021718B17F0050A4F2 /* DiffMatchPatch Mac Tests */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
+		4A4B562A1718B6B00050A4F2 /* DiffMatchPatch Source */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B562B1718B6C40050A4F2 /* DiffMatchPatch.h */,
+				4A4B562C1718B6C40050A4F2 /* DiffMatchPatch.m */,
+				4A4B562D1718B6C40050A4F2 /* DiffMatchPatchCFUtilities.h */,
+				4A4B562E1718B6C40050A4F2 /* DiffMatchPatchCFUtilities.m */,
+				4A4B562F1718B6C40050A4F2 /* DiffMatchPatchInternals.h */,
+				4A4B56301718B6C40050A4F2 /* DMDiff.h */,
+				4A4B56311718B6C40050A4F2 /* DMDiff.m */,
+				4A4B56321718B6C40050A4F2 /* DMPatch.h */,
+				4A4B56331718B6C40050A4F2 /* DMPatch.m */,
+				4A4B56341718B6C40050A4F2 /* NSString+UriCompatibility.h */,
+				4A4B56351718B6C40050A4F2 /* NSString+UriCompatibility.m */,
+			);
+			name = "DiffMatchPatch Source";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4A4B55E31718B17F0050A4F2 /* DiffMatchPatch Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A4B560B1718B17F0050A4F2 /* Build configuration list for PBXNativeTarget "DiffMatchPatch Mac" */;
+			buildPhases = (
+				4A4B55E01718B17F0050A4F2 /* Sources */,
+				4A4B55E11718B17F0050A4F2 /* Frameworks */,
+				4A4B55E21718B17F0050A4F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "DiffMatchPatch Mac";
+			productName = "DiffMatchPatch Mac";
+			productReference = 4A4B55E41718B17F0050A4F2 /* DiffMatchPatch Mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4A4B55FC1718B17F0050A4F2 /* DiffMatchPatch Mac Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A4B560E1718B17F0050A4F2 /* Build configuration list for PBXNativeTarget "DiffMatchPatch Mac Tests" */;
+			buildPhases = (
+				4A4B55F81718B17F0050A4F2 /* Sources */,
+				4A4B55F91718B17F0050A4F2 /* Frameworks */,
+				4A4B55FA1718B17F0050A4F2 /* Resources */,
+				4A4B55FB1718B17F0050A4F2 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4A4B56011718B17F0050A4F2 /* PBXTargetDependency */,
+			);
+			name = "DiffMatchPatch Mac Tests";
+			productName = "DiffMatchPatch MacTests";
+			productReference = 4A4B55FD1718B17F0050A4F2 /* DiffMatchPatch Mac Tests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4A4B559F1718B0700050A4F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+			};
+			buildConfigurationList = 4A4B55A21718B0700050A4F2 /* Build configuration list for PBXProject "DiffMatchPatch" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4A4B559E1718B0700050A4F2;
+			productRefGroup = 4A4B55AA1718B09B0050A4F2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4A4B55E31718B17F0050A4F2 /* DiffMatchPatch Mac */,
+				4A4B55FC1718B17F0050A4F2 /* DiffMatchPatch Mac Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4A4B55E21718B17F0050A4F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4B56171718B50A0050A4F2 /* MainMenu.xib in Resources */,
+				4A4B561C1718B5140050A4F2 /* Credits.rtf in Resources */,
+				4A4B561D1718B5140050A4F2 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4B55FA1718B17F0050A4F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4B56261718B59A0050A4F2 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4A4B55FB1718B17F0050A4F2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4A4B55E01718B17F0050A4F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4B56141718B5010050A4F2 /* AppDelegate.m in Sources */,
+				4A4B56201718B5370050A4F2 /* main.m in Sources */,
+				4A4B56361718B6C40050A4F2 /* DiffMatchPatch.m in Sources */,
+				4A4B56371718B6C40050A4F2 /* DiffMatchPatchCFUtilities.m in Sources */,
+				4A4B56381718B6C40050A4F2 /* DMDiff.m in Sources */,
+				4A4B56391718B6C40050A4F2 /* DMPatch.m in Sources */,
+				4A4B563A1718B6C40050A4F2 /* NSString+UriCompatibility.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4B55F81718B17F0050A4F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4B56291718B5E70050A4F2 /* DiffMatchPatchTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4A4B56011718B17F0050A4F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A4B55E31718B17F0050A4F2 /* DiffMatchPatch Mac */;
+			targetProxy = 4A4B56001718B17F0050A4F2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4A4B56151718B50A0050A4F2 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A4B56161718B50A0050A4F2 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		4A4B56181718B5140050A4F2 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A4B56191718B5140050A4F2 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		4A4B561A1718B5140050A4F2 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A4B561B1718B5140050A4F2 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4A4B56241718B59A0050A4F2 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A4B56251718B59A0050A4F2 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4A4B55A31718B0700050A4F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		4A4B55A41718B0700050A4F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		4A4B560C1718B17F0050A4F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tests/DiffMatchPatch Mac/DiffMatchPatch Mac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Tests/DiffMatchPatch Mac/DiffMatchPatch Mac-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4A4B560D1718B17F0050A4F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tests/DiffMatchPatch Mac/DiffMatchPatch Mac-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Tests/DiffMatchPatch Mac/DiffMatchPatch Mac-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		4A4B560F1718B17F0050A4F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/DiffMatchPatch Mac.app/Contents/MacOS/DiffMatchPatch Mac";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tests/DiffMatchPatch Mac/DiffMatchPatch Mac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Tests/DiffMatchPatch Mac Tests/DiffMatchPatch MacTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		4A4B56101718B17F0050A4F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/DiffMatchPatch Mac.app/Contents/MacOS/DiffMatchPatch Mac";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tests/DiffMatchPatch Mac/DiffMatchPatch Mac-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Tests/DiffMatchPatch Mac Tests/DiffMatchPatch MacTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4A4B55A21718B0700050A4F2 /* Build configuration list for PBXProject "DiffMatchPatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4B55A31718B0700050A4F2 /* Debug */,
+				4A4B55A41718B0700050A4F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A4B560B1718B17F0050A4F2 /* Build configuration list for PBXNativeTarget "DiffMatchPatch Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4B560C1718B17F0050A4F2 /* Debug */,
+				4A4B560D1718B17F0050A4F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		4A4B560E1718B17F0050A4F2 /* Build configuration list for PBXNativeTarget "DiffMatchPatch Mac Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4B560F1718B17F0050A4F2 /* Debug */,
+				4A4B56101718B17F0050A4F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4A4B559F1718B0700050A4F2 /* Project object */;
+}
