@@ -41,6 +41,11 @@
 		4A4B56DC1718BBC30050A4F2 /* DMPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D21718BBC30050A4F2 /* DMPatch.m */; };
 		4A4B56DD1718BBC30050A4F2 /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D41718BBC30050A4F2 /* NSString+UriCompatibility.m */; };
 		4A4B56DE1718BBC30050A4F2 /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D41718BBC30050A4F2 /* NSString+UriCompatibility.m */; };
+		4A5D0C541719DC1F00DBA40A /* DiffMatchPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56CB1718BBC30050A4F2 /* DiffMatchPatch.m */; };
+		4A5D0C551719DC1F00DBA40A /* DiffMatchPatchCFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56CD1718BBC30050A4F2 /* DiffMatchPatchCFUtilities.m */; };
+		4A5D0C561719DC1F00DBA40A /* DMDiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D01718BBC30050A4F2 /* DMDiff.m */; };
+		4A5D0C571719DC1F00DBA40A /* DMPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D21718BBC30050A4F2 /* DMPatch.m */; };
+		4A5D0C581719DC1F00DBA40A /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D41718BBC30050A4F2 /* NSString+UriCompatibility.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -520,6 +525,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A4B56C51718BB510050A4F2 /* DiffMatchPatchTests.m in Sources */,
+				4A5D0C541719DC1F00DBA40A /* DiffMatchPatch.m in Sources */,
+				4A5D0C551719DC1F00DBA40A /* DiffMatchPatchCFUtilities.m in Sources */,
+				4A5D0C561719DC1F00DBA40A /* DMDiff.m in Sources */,
+				4A5D0C571719DC1F00DBA40A /* DMPatch.m in Sources */,
+				4A5D0C581719DC1F00DBA40A /* NSString+UriCompatibility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -661,6 +671,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/DiffMatchPatch Mac/DiffMatchPatch Mac-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -812,6 +823,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/DiffMatchPatch iOS/DiffMatchPatch iOS-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -861,6 +873,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SDKROOT = iphoneos;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -880,7 +893,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
@@ -894,6 +907,7 @@
 				INFOPLIST_FILE = "Tests/DiffMatchPatch iOS Tests/DiffMatchPatch iOS Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SDKROOT = iphoneos;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				VALIDATE_PRODUCT = YES;
@@ -920,6 +934,7 @@
 				4A4B560D1718B17F0050A4F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4A4B560E1718B17F0050A4F2 /* Build configuration list for PBXNativeTarget "DiffMatchPatch Mac Tests" */ = {
 			isa = XCConfigurationList;
@@ -928,6 +943,7 @@
 				4A4B56101718B17F0050A4F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4A4B56A01718B7870050A4F2 /* Build configuration list for PBXNativeTarget "DiffMatchPatch iOS" */ = {
 			isa = XCConfigurationList;
@@ -936,6 +952,7 @@
 				4A4B56A21718B7870050A4F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4A4B56A31718B7870050A4F2 /* Build configuration list for PBXNativeTarget "DiffMatchPatch iOS Tests" */ = {
 			isa = XCConfigurationList;
@@ -944,6 +961,7 @@
 				4A4B56A51718B7870050A4F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

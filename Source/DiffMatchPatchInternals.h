@@ -81,7 +81,6 @@ NSMutableArray *diff_computeDiffsUsingLineMode(NSString *text1, NSString *text2,
 
 NSArray *diff_linesToCharsForStrings(NSString *text1, NSString * text2);
 NSArray *diff_tokensToCharsForStrings(NSString *text1, NSString *text2, DiffTokenMode mode);
-NSArray *diff_wordsToCharsForStrings(NSString *text1, NSString * text2);
 void diff_charsToLines(NSArray **diffs, NSArray *lineArray);
 void diff_charsToTokens(NSArray **diffs, NSArray *tokenArray);
 
@@ -108,7 +107,7 @@ NSMutableArray *patch_patchesFromStringAndDiffs(NSString *text1, NSArray *diffs,
 
 NSString *patch_addPaddingToPatches(NSMutableArray **patches, PatchProperties properties);
 void patch_splitMax(NSMutableArray **patches, PatchProperties properties);
-void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties properties);
+void diff_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties properties);
 
 // A convenience function to splice two arrays of DMDiffs or DMPatches
 void diff_spliceTwoArrays(NSMutableArray **input, NSUInteger start, NSUInteger count, NSArray *objects);
