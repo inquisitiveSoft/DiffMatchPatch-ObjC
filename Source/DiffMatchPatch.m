@@ -228,7 +228,7 @@ NSMutableArray *diff_computeDiffsBetweenTexts(NSString *text1, NSString *text2, 
 	
 	// Only risk returning a non-optimal diff if we have limited time.
 	if(properties.deadline > 0) {
-		hm = (__bridge_transfer NSArray *)diff_halfMatchCreate((__bridge CFStringRef)text1, (__bridge CFStringRef)text2);
+		hm = (__bridge_transfer NSArray *)diff_halfMatchFromStrings((__bridge CFStringRef)text1, (__bridge CFStringRef)text2);
 	}
 	
 	if(hm != nil) {

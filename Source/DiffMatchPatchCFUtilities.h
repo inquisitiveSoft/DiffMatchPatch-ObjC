@@ -76,7 +76,7 @@ CFIndex diff_commonPrefix(CFStringRef text1, CFStringRef text2);
 CFIndex diff_commonSuffix(CFStringRef text1, CFStringRef text2);
 CFIndex diff_commonOverlap(CFStringRef text1, CFStringRef text2);
 
-CFArrayRef diff_halfMatchCreate(CFStringRef text1, CFStringRef text2);
+CFArrayRef diff_halfMatchFromStrings(CFStringRef text1, CFStringRef text2);
 CFArrayRef diff_halfMatchICreate(CFStringRef longtext, CFStringRef shorttext, CFIndex i);
 CFStringRef diff_linesToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef lineArray, CFMutableDictionaryRef lineHash);
 CFStringRef diff_tokensToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash, CFOptionFlags tokenizerOptions);

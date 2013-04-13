@@ -251,8 +251,8 @@ CFIndex diff_commonOverlap(CFStringRef text1, CFStringRef text2)
  *     common middle.   Or NULL if there was no match.
  */
 
-CFArrayRef diff_halfMatchCreate(CFStringRef text1, CFStringRef text2)
-{	
+CFArrayRef diff_halfMatchFromStrings(CFStringRef text1, CFStringRef text2)
+{
 	CFStringRef longtext = CFStringGetLength(text1) > CFStringGetLength(text2) ? text1 : text2;
 	CFStringRef shorttext = CFStringGetLength(text1) > CFStringGetLength(text2) ? text2 : text1;
 	
@@ -332,8 +332,7 @@ CFArrayRef diff_halfMatchICreate(CFStringRef longtext, CFStringRef shorttext, CF
 	rangeToSearch.length = shorttext_length - (j + 1);
 	rangeToSearch.location = j + 1;
 
-	while( j < CFStringGetLength(shorttext)
-		   && (CFStringFindWithOptions(shorttext, seed, rangeToSearch, 0, &resultRange) == true) ) {
+	while(j < CFStringGetLength(shorttext) && (CFStringFindWithOptions(shorttext, seed, rangeToSearch, 0, &resultRange) == true) ) {
 		j = resultRange.location;
 		rangeToSearch.length = shorttext_length - (j + 1);
 		rangeToSearch.location = j + 1;
@@ -405,7 +404,7 @@ void diff_mungeHelper(CFStringRef token, CFMutableArrayRef tokenArray, CFMutable
 	} else {
 		CFArrayAppendValue(tokenArray, token);
 		hash = CFArrayGetCount(tokenArray) - 1;
-		NSCAssert(hash <= diff_UniCharMax, @"Hash value has exceeded UniCharMax!");
+		NSCAssert(!(hash <= diff_UniCharMax), @"Hash value has exceeded UniCharMax!");
 		CFDictionaryAddValue(tokenHash, token, (void *)hash);
 		const UniChar hashChar = (UniChar)hash;
 		CFStringAppendCharacters(chars, &hashChar, 1);
