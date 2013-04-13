@@ -251,7 +251,7 @@ CFIndex diff_commonOverlap(CFStringRef text1, CFStringRef text2)
  *     common middle.   Or NULL if there was no match.
  */
 
-CFArrayRef diff_halfMatchFromStrings(CFStringRef text1, CFStringRef text2)
+CFArrayRef diff_halfMatchCreate(CFStringRef text1, CFStringRef text2)
 {
 	CFStringRef longtext = CFStringGetLength(text1) > CFStringGetLength(text2) ? text1 : text2;
 	CFStringRef shorttext = CFStringGetLength(text1) > CFStringGetLength(text2) ? text2 : text1;

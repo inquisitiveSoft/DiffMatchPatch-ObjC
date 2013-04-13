@@ -114,21 +114,22 @@ NSMutableArray *diff_diffsBetweenTextsWithProperties(NSString *text1, NSString *
 {	
 	// Check for null inputs.
 	if(text1 == nil || text2 == nil) {
-		NSLog(@"Null inputs. (diff_main)");
+		NSLog(@"Null inputs. (diff_diffsBetweenTextsWithProperties)");
 		return nil;
 	}
 	
-#warning reimplement time limit / deadline
 	
-	// Test if the deadline is zero, or has already passed
-//	if(properties.deadline > [NSDate timeIntervalSinceReferenceDate]) {
-//		properties.deadline 
-//		if(_diffTimeout < 0.000001) {
-//			deadline = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
-//		} else {
-//			deadline = [[NSDate dateWithTimeIntervalSinceNow:_diffTimeout] timeIntervalSinceReferenceDate];
-//		}
-//	}
+	// Test if the deadline is zero or has already passed
+	if(fabsf(properties.deadline) < 0.00000001) {
+		properties.deadline = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+	} else {
+		NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+		
+		if(properties.deadline < currentTime) {
+			// The deadline has already passed so use a fairly tight deadline
+			properties.deadline = currentTime + 0.3f;	// 300 milliseconds
+		}
+	}
 	
 	
 	// Check for equality (speedup).
@@ -227,8 +228,8 @@ NSMutableArray *diff_computeDiffsBetweenTexts(NSString *text1, NSString *text2, 
 	NSArray *hm = nil;
 	
 	// Only risk returning a non-optimal diff if we have limited time.
-	if(properties.deadline > 0) {
-		hm = (__bridge_transfer NSArray *)diff_halfMatchFromStrings((__bridge CFStringRef)text1, (__bridge CFStringRef)text2);
+	if(properties.deadline != [[NSDate distantFuture] timeIntervalSinceReferenceDate]) {
+		hm = (__bridge_transfer NSArray *)diff_halfMatchCreate((__bridge CFStringRef)text1, (__bridge CFStringRef)text2);
 	}
 	
 	if(hm != nil) {
@@ -275,13 +276,16 @@ NSMutableArray *diff_computeDiffsBetweenTexts(NSString *text1, NSString *text2, 
 
 NSMutableArray *diff_computeDiffsUsingLineMode(NSString *text1, NSString *text2, DiffProperties properties)
 {
+	DiffProperties nextDiffProperties = properties;
+	nextDiffProperties.checkLines = FALSE;
+	
 	// Scan the text on a line-by-line basis first.
 	NSArray *b = diff_linesToCharsForStrings(text1, text2);
 	text1 = (NSString *)b[0];
 	text2 = (NSString *)b[1];
 	NSMutableArray *linearray = (NSMutableArray *)b[2];
 	
-	NSMutableArray *diffs = diff_diffsBetweenTextsWithProperties(text1, text2, properties);
+	NSMutableArray *diffs = diff_diffsBetweenTextsWithProperties(text1, text2, nextDiffProperties);
 	
 	// Convert the diff back to original text.
 	diff_charsToLines(&diffs, linearray);
@@ -311,11 +315,10 @@ NSMutableArray *diff_computeDiffsUsingLineMode(NSString *text1, NSString *text2,
 				break;
 				
 			case DIFF_EQUAL:
-				
 				// Upon reaching an equality, check for prior redundancies.
 				if(count_delete >= 1 && count_insert >= 1) {
 					// Delete the offending records and add the merged ones.
-					NSMutableArray *a = diff_diffsBetweenTextsWithProperties(text_delete, text_insert, properties);
+					NSMutableArray *a = diff_diffsBetweenTextsWithProperties(text_delete, text_insert, nextDiffProperties);
 					[diffs removeObjectsInRange:NSMakeRange(thisPointer - count_delete - count_insert, count_delete + count_insert)];
 					thisPointer = thisPointer - count_delete - count_insert;
 					NSUInteger insertionIndex = thisPointer;
@@ -905,7 +908,7 @@ void diff_cleanupSemanticLossless(NSMutableArray **diffs)
  * @param diffs NSMutableArray of Diff objects.
  */
 
-void diff_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties properties)
+void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties properties)
 {
 #define thisDiff			((DMDiff *)[*diffs objectAtIndex:thisPointer])
 #define equalitiesLastValue ( diff_CFArrayLastValueAsCFIndex(equalities))
@@ -1137,7 +1140,7 @@ NSString *diff_deltaFromDiffs(NSArray *diffs)
  * @return NSMutableArray of Diff objects or nil if invalid.
  */
 
-NSMutableArray *diff_fromDeltaWithText(NSString *text1, NSString *delta, NSError **error)
+NSArray *diff_diffsFromOriginalTextAndDelta(NSString *text1, NSString *delta, NSError **error)
 {
 	NSMutableArray *diffs = [NSMutableArray array];
 	NSUInteger thisPointer = 0;                                                                                                                                                                 // Cursor in text1
@@ -1787,7 +1790,7 @@ NSMutableArray *patch_patchesFromStringsWithProperties(NSString *text1, NSString
 	
 	if(diffs.count > 2) {
 		diff_cleanupSemantic(&diffs);
-		diff_cleanupDiffsForEfficiency(&diffs, properties);
+		patch_cleanupDiffsForEfficiency(&diffs, properties);
 	}
 	
 	return patch_patchesFromStringAndDiffs(text1, diffs, properties);

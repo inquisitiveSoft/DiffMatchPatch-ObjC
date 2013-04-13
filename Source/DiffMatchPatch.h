@@ -62,9 +62,11 @@ NSString *diff_text2(NSArray *diffs);
 // Create a string output from an array of DMDiff objects
 NSString *diff_prettyHTMLFromDiffs(NSArray *diffs);
 NSString *diff_deltaFromDiffs(NSArray *diffs);
+NSArray *diff_diffsFromOriginalTextAndDelta(NSString *text1, NSString *delta, NSError **error);
 
 // Calculate the levenshtein distance for an array of DMDiff objects
 NSUInteger diff_levenshtein(NSArray *diffs);
+
 
 
 #pragma mark -
