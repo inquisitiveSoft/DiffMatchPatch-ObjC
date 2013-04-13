@@ -1347,11 +1347,10 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 
 //- (void)test_match_bitapTest
 //{
-//	// Bitap algorithm.
+////	// Bitap algorithm.
 //	MatchProperties properties = match_defaultMatchProperties();
 //	properties.matchDistance = 100;
 //	properties.matchDistance = 0.5f;
-//	
 //	
 //	STAssertEquals((NSUInteger)0, NSNotFound, @"match_bitap: Exact match #1.");
 //	STAssertEquals((NSUInteger)5, match_bitapOfTextAndPattern(@"abcdefghijk", @"fgh", 5, properties), @"match_bitap: Exact match #1.");

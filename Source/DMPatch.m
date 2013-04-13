@@ -102,7 +102,8 @@
  * @param patch The patch to grow.
  * @param text Source text.
  */
-- (void)addContext:(NSString *)text withMargin:(NSInteger)patchMargin
+
+- (void)addContext:(NSString *)text withMargin:(NSInteger)patchMargin maximumBits:(NSUInteger)maximumBits
 {
 	if(text.length == 0)
 		return;
@@ -114,7 +115,7 @@
 	// different matches are found, increase the pattern length.
 	while([text rangeOfString:pattern options:NSLiteralSearch].location
 		!= [text rangeOfString:pattern options:(NSLiteralSearch | NSBackwardsSearch)].location
-			&& pattern.length < (DIFF_MATCH_MAX_BITS - patchMargin - patchMargin)) {
+			&& pattern.length < (maximumBits - patchMargin - patchMargin)) {
 		padding += patchMargin;
 		pattern = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, MAX_OF_CONST_AND_DIFF(0, self.start2, padding), MIN(text.length, self.start2 + self.length1 + padding));
 	}

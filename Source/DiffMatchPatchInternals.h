@@ -26,8 +26,6 @@
  * uses internally. You might 
  */
 
-#define DIFF_MATCH_MAX_BITS 32
-
 
 // Structs which are only used internally
 
@@ -42,6 +40,7 @@ typedef struct DiffProperties DiffProperties;
 struct MatchProperties {
 	CGFloat matchThreshold;
 	NSUInteger matchDistance;
+	NSUInteger matchMaximumBits;	// The number of bits in an int
 };
 
 typedef struct MatchProperties MatchProperties;

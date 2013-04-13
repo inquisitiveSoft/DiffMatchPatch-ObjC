@@ -68,7 +68,6 @@ NSArray *diff_diffsFromOriginalTextAndDelta(NSString *text1, NSString *delta, NS
 NSUInteger diff_levenshtein(NSArray *diffs);
 
 
-
 #pragma mark -
 #pragma mark Searching text using fuzzy matching
 
@@ -102,10 +101,7 @@ NSUInteger match_locationOfMatchInTextWithOptions(NSString *text, NSString *patt
 #pragma mark Patching text
 
 NSArray *patch_patchesFromStrings(NSString *text1, NSString *text2);
-
 NSString *patch_patchesToText(NSArray *patches);
 NSMutableArray *patch_parsePatchesFromText(NSString *textline, NSError **error);
-
-
 
 

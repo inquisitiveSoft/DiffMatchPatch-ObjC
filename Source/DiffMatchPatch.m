@@ -53,6 +53,7 @@ MatchProperties match_defaultMatchProperties()
 	MatchProperties properties;
 	properties.matchThreshold = 0.5f;
 	properties.matchDistance = 1000;
+	properties.matchMaximumBits = 32;
 	return properties;
 }
 
@@ -1563,7 +1564,7 @@ NSUInteger match_locationOfMatchInTextWithProperties(NSString *text, NSString *p
 
 NSUInteger match_bitapOfTextAndPattern(NSString *text, NSString *pattern, NSUInteger approximateLocation, MatchProperties properties)
 {
-	NSCAssert((DIFF_MATCH_MAX_BITS == 0 || pattern.length <= DIFF_MATCH_MAX_BITS), @"Pattern too long for this application.");
+	NSCAssert((properties.matchMaximumBits == 0 || pattern.length <= properties.matchMaximumBits), @"Pattern too long for this application.");
 	
 	// Initialise the alphabet.
 	NSMutableDictionary *alphabet = match_alphabetFromPattern(pattern);
@@ -1877,7 +1878,7 @@ NSMutableArray *patch_patchesFromStringAndDiffs(NSString *text1, NSArray *diffs,
 				if(diff.text.length >= 2 * properties.patchMargin) {
 					// Time for a new patch.
 					if(patch.diffs.count != 0) {
-						[patch addContext:prepatch_text withMargin:properties.patchMargin];
+						[patch addContext:prepatch_text withMargin:properties.patchMargin maximumBits:properties.matchProperties.matchMaximumBits];
 						[patches addObject:patch];
 						patch = [DMPatch new];
 						// Unlike Unidiff, our patch lists have a rolling context.
@@ -1904,7 +1905,7 @@ NSMutableArray *patch_patchesFromStringAndDiffs(NSString *text1, NSArray *diffs,
 	
 	// Pick up the leftover patch if not empty.
 	if(patch.diffs.count != 0) {
-		[patch addContext:prepatch_text withMargin:properties.patchMargin];
+		[patch addContext:prepatch_text withMargin:properties.patchMargin maximumBits:properties.matchProperties.matchMaximumBits];
 		[patches addObject:patch];
 	}
 	
@@ -1948,13 +1949,13 @@ NSArray *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text, PatchP
 		NSUInteger start_loc;
 		NSUInteger end_loc = NSNotFound;
 		
-		if(text1.length > DIFF_MATCH_MAX_BITS) {
+		if(text1.length > properties.matchProperties.matchMaximumBits) {
 			// patch_splitMax will only provide an oversized pattern
 			// in the case of a monster delete.
-			start_loc = match_locationOfMatchInTextWithProperties(textMutable, [text1 substringToIndex:DIFF_MATCH_MAX_BITS], expected_loc, properties.matchProperties);
+			start_loc = match_locationOfMatchInTextWithProperties(textMutable, [text1 substringToIndex:properties.matchProperties.matchMaximumBits], expected_loc, properties.matchProperties);
 			
 			if(start_loc != NSNotFound) {
-				end_loc = match_locationOfMatchInTextWithProperties(textMutable, [text1 substringFromIndex:text1.length - DIFF_MATCH_MAX_BITS], (expected_loc + text1.length - DIFF_MATCH_MAX_BITS), properties.matchProperties);
+				end_loc = match_locationOfMatchInTextWithProperties(textMutable, [text1 substringFromIndex:text1.length - properties.matchProperties.matchMaximumBits], (expected_loc + text1.length - properties.matchProperties.matchMaximumBits), properties.matchProperties);
 				
 				if(end_loc == NSNotFound || start_loc >= end_loc) {
 					// Can't find valid trailing context.   Drop this patch.
@@ -1979,7 +1980,7 @@ NSArray *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text, PatchP
 			if(end_loc == NSNotFound) {
 				text2 = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, start_loc, MIN(start_loc + text1.length, textMutable.length));
 			} else {
-				text2 = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, start_loc, MIN(end_loc + DIFF_MATCH_MAX_BITS, textMutable.length));
+				text2 = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, start_loc, MIN(end_loc + properties.matchProperties.matchMaximumBits, textMutable.length));
 			}
 			
 			if(text1 == text2) {
@@ -1993,7 +1994,7 @@ NSArray *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text, PatchP
 				
 				NSMutableArray *diffs = diff_diffsBetweenTextsWithProperties(text1, text2, diffProperties);
 				
-				if(text1.length > DIFF_MATCH_MAX_BITS
+				if(text1.length > properties.matchProperties.matchMaximumBits
 				   && (diff_levenshtein(diffs) / (float)text1.length) > properties.patchDeleteThreshold) {
 					// The end points match, but the content is unacceptably bad.
 					results[x] = NO;
@@ -2124,7 +2125,7 @@ void patch_splitMax(NSMutableArray **patches, PatchProperties properties)
 	if(patches == NULL)
 		return;
 
-	NSUInteger patch_size = DIFF_MATCH_MAX_BITS;
+	NSUInteger patch_size = properties.matchProperties.matchMaximumBits;
 	NSUInteger numberOfPatches = [*patches count];
 	
 	for(NSUInteger x = 0; x < numberOfPatches; x++) {
