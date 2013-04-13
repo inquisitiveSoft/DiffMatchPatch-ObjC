@@ -1563,13 +1563,14 @@ NSUInteger match_locationOfMatchInTextWithProperties(NSString *text, NSString *p
 
 NSUInteger match_bitapOfTextAndPattern(NSString *text, NSString *pattern, NSUInteger approximateLocation, MatchProperties properties)
 {
-	NSCAssert((DIFF_MATCH_MAX_BITS == 0 || pattern.length <= DIFF_MATCH_MAX_BITS),@"Pattern too long for this application.");
+	NSCAssert((DIFF_MATCH_MAX_BITS == 0 || pattern.length <= DIFF_MATCH_MAX_BITS), @"Pattern too long for this application.");
 	
 	// Initialise the alphabet.
 	NSMutableDictionary *alphabet = match_alphabetFromPattern(pattern);
 	
 	// Highest score beyond which we give up.
 	double score_threshold = properties.matchThreshold;
+	
 	// Is there a nearby exact match? (speedup)
 	NSUInteger best_loc = [text rangeOfString:pattern options:NSLiteralSearch range:NSMakeRange(approximateLocation, text.length - approximateLocation)].location;
 	
@@ -1613,6 +1614,7 @@ NSUInteger match_bitapOfTextAndPattern(NSString *text, NSString *pattern, NSUInt
 			
 			bin_mid = (bin_max - bin_min) / 2 + bin_min;
 		}
+		
 		// Use the result from this iteration as the maximum for the next.
 		bin_max = bin_mid;
 		NSUInteger start = MAX_OF_CONST_AND_DIFF(1, approximateLocation, bin_mid);

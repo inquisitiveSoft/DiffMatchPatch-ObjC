@@ -1334,72 +1334,69 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 
 #pragma mark Match Test Functions
 
-/*
 
 - (void)test_match_alphabetTest {
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
-	
 	// Initialise the bitmasks for Bitap.
-	NSMutableDictionary *bitmask = [NSMutableDictionary dictionary];
-	[bitmask diff_setUnsignedIntegerValue:4 forUnicharKey:'a'];
-	[bitmask diff_setUnsignedIntegerValue:2 forUnicharKey:'b'];
-	[bitmask diff_setUnsignedIntegerValue:1 forUnicharKey:'c'];
-	STAssertEqualObjects(bitmask, match_alphabet:@"abc"], @"match_alphabet: Unique.");
+	NSMutableDictionary *bitmask = [@{ @"a" : @(4), @"b" : @(2), @"c" : @(1) } mutableCopy];
+	STAssertEqualObjects(bitmask, match_alphabetFromPattern(@"abc"), @"match_alphabet: Unique.");
 	
-	[bitmask removeAllObjects];
-	[bitmask diff_setUnsignedIntegerValue:37 forUnicharKey:'a'];
-	[bitmask diff_setUnsignedIntegerValue:18 forUnicharKey:'b'];
-	[bitmask diff_setUnsignedIntegerValue:8 forUnicharKey:'c'];
-	STAssertEqualObjects(bitmask, match_alphabet:@"abcaba"], @"match_alphabet: Duplicates.");
+	bitmask = [@{ @"a" : @(37), @"b" : @(18), @"c" : @(8) } mutableCopy];
+	STAssertEqualObjects(bitmask, match_alphabetFromPattern(@"abcaba"), @"match_alphabet: Duplicates.");
 }
 
-- (void)test_match_bitapTest {
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
-	
-	// Bitap algorithm.
-	dmp.Match_Distance = 100;
-	dmp.Match_Threshold = 0.5f;
-	STAssertEquals((NSUInteger)5, match_bitapOfText:@"abcdefghijk" andPattern:@"fgh" near:5], @"match_bitap: Exact match #1.");
-	
-	STAssertEquals((NSUInteger)5, match_bitapOfText:@"abcdefghijk" andPattern:@"fgh" near:0], @"match_bitap: Exact match #2.");
-	
-	STAssertEquals((NSUInteger)4, match_bitapOfText:@"abcdefghijk" andPattern:@"efxhi" near:0], @"match_bitap: Fuzzy match #1.");
-	
-	STAssertEquals((NSUInteger)2, match_bitapOfText:@"abcdefghijk" andPattern:@"cdefxyhijk" near:5], @"match_bitap: Fuzzy match #2.");
-	
-	STAssertEquals((NSUInteger)NSNotFound, match_bitapOfText:@"abcdefghijk" andPattern:@"bxy" near:1], @"match_bitap: Fuzzy match #3.");
-	
-	STAssertEquals((NSUInteger)2, match_bitapOfText:@"123456789xx0" andPattern:@"3456789x0" near:2], @"match_bitap: Overflow.");
-	
-	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdef" andPattern:@"xxabc" near:4], @"match_bitap: Before start match.");
-	
-	STAssertEquals((NSUInteger)3, match_bitapOfText:@"abcdef" andPattern:@"defyy" near:4], @"match_bitap: Beyond end match.");
-	
-	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdef" andPattern:@"xabcdefy" near:0], @"match_bitap: Oversized pattern.");
-	
-	dmp.Match_Threshold = 0.4f;
-	STAssertEquals((NSUInteger)4, match_bitapOfText:@"abcdefghijk" andPattern:@"efxyhi" near:1], @"match_bitap: Threshold #1.");
-	
-	dmp.Match_Threshold = 0.3f;
-	STAssertEquals((NSUInteger)NSNotFound, match_bitapOfText:@"abcdefghijk" andPattern:@"efxyhi" near:1], @"match_bitap: Threshold #2.");
-	
-	dmp.Match_Threshold = 0.0f;
-	STAssertEquals((NSUInteger)1, match_bitapOfText:@"abcdefghijk" andPattern:@"bcdef" near:1], @"match_bitap: Threshold #3.");
-	
-	dmp.Match_Threshold = 0.5f;
-	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdexyzabcde" andPattern:@"abccde" near:3], @"match_bitap: Multiple select #1.");
-	
-	STAssertEquals((NSUInteger)8, match_bitapOfText:@"abcdexyzabcde" andPattern:@"abccde" near:5], @"match_bitap: Multiple select #2.");
-	
-	dmp.Match_Distance = 10;  // Strict location.
-	STAssertEquals((NSUInteger)NSNotFound, match_bitapOfText:@"abcdefghijklmnopqrstuvwxyz" andPattern:@"abcdefg" near:24], @"match_bitap: Distance test #1.");
-	
-	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdefghijklmnopqrstuvwxyz" andPattern:@"abcdxxefg" near:1], @"match_bitap: Distance test #2.");
-	
-	dmp.Match_Distance = 1000;  // Loose location.
-	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdefghijklmnopqrstuvwxyz" andPattern:@"abcdefg" near:24], @"match_bitap: Distance test #3.");
-}
 
+//- (void)test_match_bitapTest
+//{
+//	// Bitap algorithm.
+//	MatchProperties properties = match_defaultMatchProperties();
+//	properties.matchDistance = 100;
+//	properties.matchDistance = 0.5f;
+//	
+//	
+//	STAssertEquals((NSUInteger)0, NSNotFound, @"match_bitap: Exact match #1.");
+//	STAssertEquals((NSUInteger)5, match_bitapOfTextAndPattern(@"abcdefghijk", @"fgh", 5, properties), @"match_bitap: Exact match #1.");
+//	
+//	STAssertEquals((NSUInteger)5, match_bitapOfText:@"abcdefghijk" andPattern:@"fgh" near:0], @"match_bitap: Exact match #2.");
+//	
+//	STAssertEquals((NSUInteger)4, match_bitapOfText:@"abcdefghijk" andPattern:@"efxhi" near:0], @"match_bitap: Fuzzy match #1.");
+//	
+//	STAssertEquals((NSUInteger)2, match_bitapOfText:@"abcdefghijk" andPattern:@"cdefxyhijk" near:5], @"match_bitap: Fuzzy match #2.");
+//	
+//	STAssertEquals((NSUInteger)NSNotFound, match_bitapOfText:@"abcdefghijk" andPattern:@"bxy" near:1], @"match_bitap: Fuzzy match #3.");
+//	
+//	STAssertEquals((NSUInteger)2, match_bitapOfText:@"123456789xx0" andPattern:@"3456789x0" near:2], @"match_bitap: Overflow.");
+//	
+//	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdef" andPattern:@"xxabc" near:4], @"match_bitap: Before start match.");
+//	
+//	STAssertEquals((NSUInteger)3, match_bitapOfText:@"abcdef" andPattern:@"defyy" near:4], @"match_bitap: Beyond end match.");
+//	
+//	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdef" andPattern:@"xabcdefy" near:0], @"match_bitap: Oversized pattern.");
+//	
+//	dmp.Match_Threshold = 0.4f;
+//	STAssertEquals((NSUInteger)4, match_bitapOfText:@"abcdefghijk" andPattern:@"efxyhi" near:1], @"match_bitap: Threshold #1.");
+//	
+//	dmp.Match_Threshold = 0.3f;
+//	STAssertEquals((NSUInteger)NSNotFound, match_bitapOfText:@"abcdefghijk" andPattern:@"efxyhi" near:1], @"match_bitap: Threshold #2.");
+//	
+//	dmp.Match_Threshold = 0.0f;
+//	STAssertEquals((NSUInteger)1, match_bitapOfText:@"abcdefghijk" andPattern:@"bcdef" near:1], @"match_bitap: Threshold #3.");
+//	
+//	dmp.Match_Threshold = 0.5f;
+//	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdexyzabcde" andPattern:@"abccde" near:3], @"match_bitap: Multiple select #1.");
+//	
+//	STAssertEquals((NSUInteger)8, match_bitapOfText:@"abcdexyzabcde" andPattern:@"abccde" near:5], @"match_bitap: Multiple select #2.");
+//	
+//	dmp.Match_Distance = 10;  // Strict location.
+//	STAssertEquals((NSUInteger)NSNotFound, match_bitapOfText:@"abcdefghijklmnopqrstuvwxyz" andPattern:@"abcdefg" near:24], @"match_bitap: Distance test #1.");
+//	
+//	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdefghijklmnopqrstuvwxyz" andPattern:@"abcdxxefg" near:1], @"match_bitap: Distance test #2.");
+//	
+//	dmp.Match_Distance = 1000;  // Loose location.
+//	STAssertEquals((NSUInteger)0, match_bitapOfText:@"abcdefghijklmnopqrstuvwxyz" andPattern:@"abcdefg" near:24], @"match_bitap: Distance test #3.");
+//}
+
+
+/*
 - (void)test_match_mainTest {
 	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
 	
