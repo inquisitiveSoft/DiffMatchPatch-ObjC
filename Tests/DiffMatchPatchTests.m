@@ -1394,294 +1394,305 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 	STAssertEquals((NSUInteger)3, match_locationOfMatchInText(@"abcdef", @"de", 3), @"match_main: Exact match.");
 	STAssertEquals((NSUInteger)3, match_locationOfMatchInText(@"abcdef", @"defy", 4), @"match_main: Beyond end match.");
 	STAssertEquals((NSUInteger)0, match_locationOfMatchInText(@"abcdef", @"abcdefy", 0), @"match_main: Oversized pattern.");
-	
 	STAssertEquals((NSUInteger)4, match_locationOfMatchInTextWithOptions(@"I am the very model of a modern major general.", @" that berry ", 5, 0.7f, 1000), @"match_main: Complex match.");
 	
-	// CHANGEME: Test null inputs
+	STAssertEquals((NSUInteger)NSNotFound, match_locationOfMatchInText(NULL, @"Pattern", 0), @"match_main: Null text.");
+	STAssertEquals((NSUInteger)NSNotFound, match_locationOfMatchInText(@"Text", NULL, 0), @"match_main: Null pattern.");
+	STAssertEquals((NSUInteger)NSNotFound, match_locationOfMatchInText(NULL, NULL, 0), @"match_main: Both null.");
 }
 
 
 #pragma mark Patch Test Functions
 //  PATCH TEST FUNCTIONS
 
-/*
+
 - (void)test_patch_patchObjTest {
 	// Patch Object.
-	Patch *p = [[Patch new] autorelease];
-	p.start1 = 20;
-	p.start2 = 21;
-	p.length1 = 18;
-	p.length2 = 17;
-	p.diffs = [NSMutableArray arrayWithObjects:
-			   [DMDiff diffWithOperation:DIFF_EQUAL andText:@"jump"],
-			   [DMDiff diffWithOperation:DIFF_DELETE andText:@"s"],
-			   [DMDiff diffWithOperation:DIFF_INSERT andText:@"ed"],
-			   [DMDiff diffWithOperation:DIFF_EQUAL andText:@" over "],
-			   [DMDiff diffWithOperation:DIFF_DELETE andText:@"the"],
-			   [DMDiff diffWithOperation:DIFF_INSERT andText:@"a"],
-			   [DMDiff diffWithOperation:DIFF_EQUAL andText:@"\nlaz"], nil];
-	NSString *strp = @"@@ -21,18 +22,17 @@\n jump\n-s\n+ed\n  over \n-the\n+a\n %0Alaz\n";
-	STAssertEqualObjects(strp, [p description], @"Patch: description.");
+	DMPatch *patch = [[DMPatch alloc] init];
+	patch.start1 = 20;
+	patch.start2 = 21;
+	patch.length1 = 18;
+	patch.length2 = 17;
+	patch.diffs = [NSMutableArray arrayWithObjects:
+	   [DMDiff diffWithOperation:DIFF_EQUAL andText:@"jump"],
+	   [DMDiff diffWithOperation:DIFF_DELETE andText:@"s"],
+	   [DMDiff diffWithOperation:DIFF_INSERT andText:@"ed"],
+	   [DMDiff diffWithOperation:DIFF_EQUAL andText:@" over "],
+	   [DMDiff diffWithOperation:DIFF_DELETE andText:@"the"],
+	   [DMDiff diffWithOperation:DIFF_INSERT andText:@"a"],
+	   [DMDiff diffWithOperation:DIFF_EQUAL andText:@"\nlaz"],
+		   nil];
+	
+	NSString *expectedDescription = @"@@ -21,18 +22,17 @@\n jump\n-s\n+ed\n  over \n-the\n+a\n %0Alaz\n";
+	STAssertEqualObjects(expectedDescription, [patch description], @"Patch: description.");
 }
 
-- (void)test_patch_fromTextTest {
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
+
+- (void)test_patch_fromTextTest
+{
 	
-	STAssertTrue(((NSMutableArray *)patch_fromText:@"" error:NULL]).count == 0, @"patch_fromText: #0.");
+	STAssertTrue(patch_parsePatchesFromText(@"", NULL).count == 0, @"patch_fromText: #0.");
 	
-	NSString *strp = @"@@ -21,18 +22,17 @@\n jump\n-s\n+ed\n  over \n-the\n+a\n %0Alaz\n";
-	STAssertEqualObjects(strp, [[patch_fromText:strp error:NULL] objectAtIndex:0] description], @"patch_fromText: #1.");
+	NSString *patchesAsText = @"@@ -21,18 +22,17 @@\n jump\n-s\n+ed\n  over \n-the\n+a\n %0Alaz\n";
+	STAssertEqualObjects(patchesAsText, [[patch_parsePatchesFromText(patchesAsText, NULL) objectAtIndex:0] description], @"patch_fromText: #1.");
 	
-	STAssertEqualObjects(@"@@ -1 +1 @@\n-a\n+b\n", [[patch_fromText:@"@@ -1 +1 @@\n-a\n+b\n" error:NULL] objectAtIndex:0] description], @"patch_fromText: #2.");
+	patchesAsText = @"@@ -1 +1 @@\n-a\n+b\n";
+	STAssertEqualObjects(patchesAsText, [[patch_parsePatchesFromText(patchesAsText, NULL) objectAtIndex:0] description], @"patch_fromText: #2.");
 	
-	STAssertEqualObjects(@"@@ -1,3 +0,0 @@\n-abc\n", [[patch_fromText:@"@@ -1,3 +0,0 @@\n-abc\n" error:NULL] objectAtIndex:0] description], @"patch_fromText: #3.");
+	patchesAsText = @"@@ -1,3 +0,0 @@\n-abc\n";
+	STAssertEqualObjects(patchesAsText, [[patch_parsePatchesFromText(patchesAsText, NULL) objectAtIndex:0] description], @"patch_fromText: #3.");
 	
-	STAssertEqualObjects(@"@@ -0,0 +1,3 @@\n+abc\n", [[patch_fromText:@"@@ -0,0 +1,3 @@\n+abc\n" error:NULL] objectAtIndex:0] description], @"patch_fromText: #4.");
+	patchesAsText = @"@@ -0,0 +1,3 @@\n+abc\n";
+	STAssertEqualObjects(patchesAsText, [[patch_parsePatchesFromText(patchesAsText, NULL) objectAtIndex:0] description], @"patch_fromText: #4.");
 	
 	// Generates error.
 	NSError *error = nil;
-	NSMutableArray *patches = patch_fromText:@"Bad\nPatch\n" error:&error];
-	if (patches != nil || error == nil) {
+	NSArray *patches = patch_parsePatchesFromText(@"Bad\nPatch\n", &error);
+	
+	if(patches != nil || error == nil) {
 		// Error expected.
 		STFail(@"patch_fromText: #5.");
 	}
-	error = nil;
 }
 
-- (void)test_patch_toTextTest {
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
+
+- (void)test_patch_toTextTest
+{
+	NSString *patchesAsText = @"@@ -21,18 +22,17 @@\n jump\n-s\n+ed\n  over \n-the\n+a\n  laz\n";
+	NSArray *patches = patch_parsePatchesFromText(patchesAsText, NULL);
+	STAssertEqualObjects(patchesAsText, patch_patchesToText(patches), @"toText Test #1");
 	
-	NSString *strp = @"@@ -21,18 +22,17 @@\n jump\n-s\n+ed\n  over \n-the\n+a\n  laz\n";
-	NSMutableArray *patches;
-	patches = patch_fromText:strp error:NULL];
-	STAssertEqualObjects(strp, patch_toText:patches], @"toText Test #1");
-	
-	strp = @"@@ -1,9 +1,9 @@\n-f\n+F\n oo+fooba\n@@ -7,9 +7,9 @@\n obar\n-,\n+.\n  tes\n";
-	patches = patch_fromText:strp error:NULL];
-	STAssertEqualObjects(strp, patch_toText:patches], @"toText Test #2");
+	patchesAsText = @"@@ -1,9 +1,9 @@\n-f\n+F\n oo+fooba\n@@ -7,9 +7,9 @@\n obar\n-,\n+.\n  tes\n";
+	patches = patch_parsePatchesFromText(patchesAsText, NULL);
+	STAssertEqualObjects(patchesAsText, patch_patchesToText(patches), @"toText Test #2");
 }
 
-- (void)test_patch_addContextTest {
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
+
+- (void)test_patch_addContextTest
+{
+	PatchProperties properties = patch_defaultPatchProperties();
+	properties.patchMargin = 4;
+
+	DMPatch *patch = [patch_parsePatchesFromText(@"@@ -21,4 +21,10 @@\n-jump\n+somersault\n", NULL) objectAtIndex:0];
+	[patch addContext:@"The quick brown fox jumps over the lazy dog." withMargin:properties.patchMargin maximumBits:properties.matchProperties.matchMaximumBits];
+	STAssertEqualObjects(@"@@ -17,12 +17,18 @@\n fox \n-jump\n+somersault\n s ov\n", [patch description], @"patch_addContext: Simple case.");
 	
-	dmp.Patch_Margin = 4;
-	Patch *p;
-	p = [patch_fromText:@"@@ -21,4 +21,10 @@\n-jump\n+somersault\n" error:NULL] objectAtIndex:0];
-	patch_addContextToPatch:p sourceText:@"The quick brown fox jumps over the lazy dog."];
-	STAssertEqualObjects(@"@@ -17,12 +17,18 @@\n fox \n-jump\n+somersault\n s ov\n", [p description], @"patch_addContext: Simple case.");
+	patch = [patch_parsePatchesFromText(@"@@ -21,4 +21,10 @@\n-jump\n+somersault\n", NULL) objectAtIndex:0];
+	[patch addContext:@"The quick brown fox jumps." withMargin:properties.patchMargin maximumBits:properties.matchProperties.matchMaximumBits];
+	STAssertEqualObjects(@"@@ -17,10 +17,16 @@\n fox \n-jump\n+somersault\n s.\n", [patch description], @"patch_addContext: Not enough trailing context.");
 	
-	p = [patch_fromText:@"@@ -21,4 +21,10 @@\n-jump\n+somersault\n" error:NULL] objectAtIndex:0];
-	patch_addContextToPatch:p sourceText:@"The quick brown fox jumps."];
-	STAssertEqualObjects(@"@@ -17,10 +17,16 @@\n fox \n-jump\n+somersault\n s.\n", [p description], @"patch_addContext: Not enough trailing context.");
+	patch = [patch_parsePatchesFromText(@"@@ -3 +3,2 @@\n-e\n+at\n", NULL) objectAtIndex:0];
+	[patch addContext:@"The quick brown fox jumps." withMargin:properties.patchMargin maximumBits:properties.matchProperties.matchMaximumBits];
+	STAssertEqualObjects(@"@@ -1,7 +1,8 @@\n Th\n-e\n+at\n  qui\n", [patch description], @"patch_addContext: Not enough leading context.");
 	
-	p = [patch_fromText:@"@@ -3 +3,2 @@\n-e\n+at\n" error:NULL] objectAtIndex:0];
-	patch_addContextToPatch:p sourceText:@"The quick brown fox jumps."];
-	STAssertEqualObjects(@"@@ -1,7 +1,8 @@\n Th\n-e\n+at\n  qui\n", [p description], @"patch_addContext: Not enough leading context.");
 	
-	p = [patch_fromText:@"@@ -3 +3,2 @@\n-e\n+at\n" error:NULL] objectAtIndex:0];
-	patch_addContextToPatch:p sourceText:@"The quick brown fox jumps.  The quick brown fox crashes."];
-	STAssertEqualObjects(@"@@ -1,27 +1,28 @@\n Th\n-e\n+at\n  quick brown fox jumps. \n", [p description], @"patch_addContext: Ambiguity.");
+	patch = [patch_parsePatchesFromText(@"@@ -3 +3,2 @@\n-e\n+at\n", NULL) objectAtIndex:0];
+	[patch addContext:@"The quick brown fox jumps.  The quick brown fox crashes." withMargin:properties.patchMargin maximumBits:properties.matchProperties.matchMaximumBits];
+	STAssertEqualObjects(@"@@ -1,27 +1,28 @@\n Th\n-e\n+at\n  quick brown fox jumps. \n", [patch description], @"patch_addContext: Ambiguity.");
 }
 
-- (void)test_patch_makeTest {
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
-	
-	NSMutableArray *patches;
-	patches = patch_makeFromOldString:@"" andNewString:@""];
-	STAssertEqualObjects(@"", patch_toText:patches], @"patch_make: Null case.");
+
+- (void)test_patch_makeTest
+{
+	NSArray *patches = patch_patchesFromTexts(@"", @"");
+	STAssertEqualObjects(@"", patch_patchesToText(patches), @"patch_patchesFromTexts: Empty case.");
+
+	patches = patch_patchesFromTexts(nil, nil);
+	STAssertEqualObjects(@"", patch_patchesToText(patches), @"patch_patchesFromTexts: Nil case.");
 	
 	NSString *text1 = @"The quick brown fox jumps over the lazy dog.";
 	NSString *text2 = @"That quick brown fox jumped over a lazy dog.";
-	NSString *expectedPatch = @"@@ -1,8 +1,7 @@\n Th\n-at\n+e\n  qui\n@@ -21,17 +21,18 @@\n jump\n-ed\n+s\n  over \n-a\n+the\n  laz\n";
+	NSString *patchAsText = @"@@ -1,8 +1,7 @@\n Th\n-at\n+e\n  qui\n@@ -21,17 +21,18 @@\n jump\n-ed\n+s\n  over \n-a\n+the\n  laz\n";
 	// The second patch must be @"-21,17 +21,18", not @"-22,17 +21,18" due to rolling context.
-	patches = patch_makeFromOldString:text2 andNewString:text1];
-	STAssertEqualObjects(expectedPatch, patch_toText:patches], @"patch_make: Text2+Text1 inputs.");
 	
-	expectedPatch = @"@@ -1,11 +1,12 @@\n Th\n-e\n+at\n  quick b\n@@ -22,18 +22,17 @@\n jump\n-s\n+ed\n  over \n-the\n+a\n  laz\n";
-	patches = patch_makeFromOldString:text1 andNewString:text2];
-	STAssertEqualObjects(expectedPatch, patch_toText:patches], @"patch_make: Text1+Text2 inputs.");
+	patches = patch_patchesFromTexts(text2, text1);
+	STAssertEqualObjects(patchAsText, patch_patchesToText(patches), @"patch_patchesFromTexts: Text2+Text1 inputs.");
 	
-	NSMutableArray *diffs = diff_diffsBetweenTexts(text1 andNewString:text2 checkLines:NO];
-	patches = patch_makeFromDiffs:diffs];
-	STAssertEqualObjects(expectedPatch, patch_toText:patches], @"patch_make: Diff input.");
+	patchAsText = @"@@ -1,11 +1,12 @@\n Th\n-e\n+at\n  quick b\n@@ -22,18 +22,17 @@\n jump\n-s\n+ed\n  over \n-the\n+a\n  laz\n";
+	patches = patch_patchesFromTexts(text1, text2);
+	STAssertEqualObjects(patchAsText, patch_patchesToText(patches), @"patch_patchesFromTexts: Text1+Text2 inputs.");
 	
-	patches = patch_makeFromOldString:text1 andDiffs:diffs];
-	STAssertEqualObjects(expectedPatch, patch_toText:patches], @"patch_make: Text1+Diff inputs.");
+	PatchProperties properties = patch_defaultPatchProperties();
+	NSArray *diffs = diff_diffsBetweenTexts(text1, text2);
+	patches = patch_patchesFromDiffs(diffs, properties);
+	STAssertEqualObjects(patchAsText, patch_patchesToText(patches), @"patch_patchesFromDiffs: Diff input.");
 	
-	patches = patch_makeFromOldString:text1 newString:text2 diffs:diffs];
-	STAssertEqualObjects(expectedPatch, patch_toText:patches], @"patch_make: Text1+Text2+Diff inputs (deprecated).");
+	patches = patch_patchesFromTextAndDiffs(text1, diffs, properties);
+	STAssertEqualObjects(patchAsText, patch_patchesToText(patches), @"patch_patchesFromTextAndDiffs: Text1+Diff inputs.");
+		
 	
-	patches = patch_makeFromOldString:@"`1234567890-=[]\\;',./" andNewString:@"~!@#$%^&*()_+{}|:\"<>?"];
-	STAssertEqualObjects(@"@@ -1,21 +1,21 @@\n-%601234567890-=%5B%5D%5C;',./\n+~!@#$%25%5E&*()_+%7B%7D%7C:%22%3C%3E?\n",
-						 patch_toText:patches],
-						 @"patch_toText: Character encoding.");
+	patches = patch_patchesFromTexts(@"`1234567890-=[]\\;',./", @"~!@#$%^&*()_+{}|:\"<>?");
+	STAssertEqualObjects(@"@@ -1,21 +1,21 @@\n-%601234567890-=%5B%5D%5C;',./\n+~!@#$%25%5E&*()_+%7B%7D%7C:%22%3C%3E?\n", patch_patchesToText(patches), @"patch_patchesFromTexts: Character encoding.");
 	
 	diffs = [NSMutableArray arrayWithObjects:
 			 [DMDiff diffWithOperation:DIFF_DELETE andText:@"`1234567890-=[]\\;',./"],
 			 [DMDiff diffWithOperation:DIFF_INSERT andText:@"~!@#$%^&*()_+{}|:\"<>?"], nil];
-	STAssertEqualObjects(diffs,
-						 ((Patch *)[patch_fromText:@"@@ -1,21 +1,21 @@\n-%601234567890-=%5B%5D%5C;',./\n+~!@#$%25%5E&*()_+%7B%7D%7C:%22%3C%3E?\n" error:NULL] objectAtIndex:0]).diffs,
-						 @"patch_fromText: Character decoding.");
+	
+	patchAsText = @"@@ -1,21 +1,21 @@\n-%601234567890-=%5B%5D%5C;',./\n+~!@#$%25%5E&*()_+%7B%7D%7C:%22%3C%3E?\n";
+	STAssertEqualObjects(diffs, [(DMPatch *)[patch_parsePatchesFromText(patchAsText, NULL) objectAtIndex:0] diffs], @"patch_fromText: Character decoding.");
 	
 	NSMutableString *text1Mutable = [NSMutableString string];
-	for (int x = 0; x < 100; x++) {
+	
+	for(int x = 0; x < 100; x++)
 		[text1Mutable appendString:@"abcdef"];
-	}
+	
 	text1 = text1Mutable;
 	text2 = [text1 stringByAppendingString:@"123"];
+	
 	// CHANGEME: Why does this implementation produce a different, more brief patch?
 	//expectedPatch = @"@@ -573,28 +573,31 @@\n cdefabcdefabcdefabcdefabcdef\n+123\n";
-	expectedPatch = @"@@ -597,4 +597,7 @@\n cdef\n+123\n";
-	patches = patch_makeFromOldString:text1 andNewString:text2];
-	STAssertEqualObjects(expectedPatch, patch_toText:patches], @"patch_make: Long string with repeats.");
-	
-	// CHANGEME: Test null inputs
+	patchAsText = @"@@ -597,4 +597,7 @@\n cdef\n+123\n";
+	patches = patch_patchesFromTexts(text1, text2);
+	STAssertEqualObjects(patchAsText, patch_patchesToText(patches), @"patch_make: Long string with repeats.");
 }
 
 
-- (void)test_patch_splitMaxTest {
+- (void)test_patch_splitMaxTest
+{
 	// Assumes that Match_MaxBits is 32.
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
-	NSMutableArray *patches;
+	PatchProperties properties = patch_defaultPatchProperties();
+	properties.matchProperties.matchMaximumBits = 32;
 	
-	patches = patch_makeFromOldString:@"abcdefghijklmnopqrstuvwxyz01234567890" andNewString:@"XabXcdXefXghXijXklXmnXopXqrXstXuvXwxXyzX01X23X45X67X89X0"];
-	patch_splitMax:patches];
-	STAssertEqualObjects(@"@@ -1,32 +1,46 @@\n+X\n ab\n+X\n cd\n+X\n ef\n+X\n gh\n+X\n ij\n+X\n kl\n+X\n mn\n+X\n op\n+X\n qr\n+X\n st\n+X\n uv\n+X\n wx\n+X\n yz\n+X\n 012345\n@@ -25,13 +39,18 @@\n zX01\n+X\n 23\n+X\n 45\n+X\n 67\n+X\n 89\n+X\n 0\n", patch_toText:patches], @"Assumes that Match_MaxBits is 32 #1");
 	
-	patches = patch_makeFromOldString:@"abcdef1234567890123456789012345678901234567890123456789012345678901234567890uvwxyz" andNewString:@"abcdefuvwxyz"];
-	NSString *oldToText = patch_toText:patches];
-	patch_splitMax:patches];
-	STAssertEqualObjects(oldToText, patch_toText:patches], @"Assumes that Match_MaxBits is 32 #2");
+	NSMutableArray *mutablePatches = [patch_patchesFromTexts(@"abcdefghijklmnopqrstuvwxyz01234567890", @"XabXcdXefXghXijXklXmnXopXqrXstXuvXwxXyzX01X23X45X67X89X0") mutableCopy];
+	patch_splitMax(&mutablePatches, properties);
+	STAssertEqualObjects(@"@@ -1,32 +1,46 @@\n+X\n ab\n+X\n cd\n+X\n ef\n+X\n gh\n+X\n ij\n+X\n kl\n+X\n mn\n+X\n op\n+X\n qr\n+X\n st\n+X\n uv\n+X\n wx\n+X\n yz\n+X\n 012345\n@@ -25,13 +39,18 @@\n zX01\n+X\n 23\n+X\n 45\n+X\n 67\n+X\n 89\n+X\n 0\n", patch_patchesToText(mutablePatches), @"Assumes that Match_MaxBits is 32 #1");
 	
-	patches = patch_makeFromOldString:@"1234567890123456789012345678901234567890123456789012345678901234567890" andNewString:@"abc"];
-	patch_splitMax:patches];
-	STAssertEqualObjects(@"@@ -1,32 +1,4 @@\n-1234567890123456789012345678\n 9012\n@@ -29,32 +1,4 @@\n-9012345678901234567890123456\n 7890\n@@ -57,14 +1,3 @@\n-78901234567890\n+abc\n", patch_toText:patches], @"Assumes that Match_MaxBits is 32 #3");
+	mutablePatches = [patch_patchesFromTexts(@"abcdef1234567890123456789012345678901234567890123456789012345678901234567890uvwxyz", @"abcdefuvwxyz") mutableCopy];
+	NSString *previousText = patch_patchesToText(mutablePatches);
+	patch_splitMax(&mutablePatches, properties);
+	STAssertEqualObjects(previousText, patch_patchesToText(mutablePatches), @"Assumes that Match_MaxBits is 32 #2");
 	
-	patches = patch_makeFromOldString:@"abcdefghij , h : 0 , t : 1 abcdefghij , h : 0 , t : 1 abcdefghij , h : 0 , t : 1" andNewString:@"abcdefghij , h : 1 , t : 1 abcdefghij , h : 1 , t : 1 abcdefghij , h : 0 , t : 1"];
-	patch_splitMax:patches];
-	STAssertEqualObjects(@"@@ -2,32 +2,32 @@\n bcdefghij , h : \n-0\n+1\n  , t : 1 abcdef\n@@ -29,32 +29,32 @@\n bcdefghij , h : \n-0\n+1\n  , t : 1 abcdef\n", patch_toText:patches], @"Assumes that Match_MaxBits is 32 #4");
+	mutablePatches = [patch_patchesFromTexts(@"1234567890123456789012345678901234567890123456789012345678901234567890", @"abc") mutableCopy];
+	patch_splitMax(&mutablePatches, properties);
+	STAssertEqualObjects(@"@@ -1,32 +1,4 @@\n-1234567890123456789012345678\n 9012\n@@ -29,32 +1,4 @@\n-9012345678901234567890123456\n 7890\n@@ -57,14 +1,3 @@\n-78901234567890\n+abc\n", patch_patchesToText(mutablePatches), @"Assumes that Match_MaxBits is 32 #3");
+	
+	mutablePatches = [patch_patchesFromTexts(@"abcdefghij , h : 0 , t : 1 abcdefghij , h : 0 , t : 1 abcdefghij , h : 0 , t : 1", @"abcdefghij , h : 1 , t : 1 abcdefghij , h : 1 , t : 1 abcdefghij , h : 0 , t : 1") mutableCopy];
+	patch_splitMax(&mutablePatches, properties);
+	STAssertEqualObjects(@"@@ -2,32 +2,32 @@\n bcdefghij , h : \n-0\n+1\n  , t : 1 abcdef\n@@ -29,32 +29,32 @@\n bcdefghij , h : \n-0\n+1\n  , t : 1 abcdef\n", patch_patchesToText(mutablePatches), @"Assumes that Match_MaxBits is 32 #4");
 }
 
-- (void)test_patch_addPaddingTest {
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
+
+- (void)test_patch_addPaddingTest
+{
+	PatchProperties properties = patch_defaultPatchProperties();
 	
-	NSMutableArray *patches;
-	patches = patch_makeFromOldString:@"" andNewString:@"test"];
-	STAssertEqualObjects(@"@@ -0,0 +1,4 @@\n+test\n",
-						 patch_toText:patches],
-						 @"patch_addPadding: Both edges full.");
-	patch_addPadding:patches];
-	STAssertEqualObjects(@"@@ -1,8 +1,12 @@\n %01%02%03%04\n+test\n %01%02%03%04\n",
-						 patch_toText:patches],
-						 @"patch_addPadding: Both edges full.");
+	NSMutableArray *mutablePatches = [patch_patchesFromTexts(@"", @"test") mutableCopy];
+	STAssertEqualObjects(@"@@ -0,0 +1,4 @@\n+test\n", patch_patchesToText(mutablePatches), @"patch_addPadding: Both edges full.");
+	patch_addPaddingToPatches(&mutablePatches, properties);
 	
-	patches = patch_makeFromOldString:@"XY" andNewString:@"XtestY"];
-	STAssertEqualObjects(@"@@ -1,2 +1,6 @@\n X\n+test\n Y\n",
-						 patch_toText:patches],
-						 @"patch_addPadding: Both edges partial.");
-	patch_addPadding:patches];
-	STAssertEqualObjects(@"@@ -2,8 +2,12 @@\n %02%03%04X\n+test\n Y%01%02%03\n",
-						 patch_toText:patches],
-						 @"patch_addPadding: Both edges partial.");
+	STAssertEqualObjects(@"@@ -1,8 +1,12 @@\n %01%02%03%04\n+test\n %01%02%03%04\n", patch_patchesToText(mutablePatches), @"patch_addPadding: Both edges full.");
 	
-	patches = patch_makeFromOldString:@"XXXXYYYY" andNewString:@"XXXXtestYYYY"];
-	STAssertEqualObjects(@"@@ -1,8 +1,12 @@\n XXXX\n+test\n YYYY\n",
-						 patch_toText:patches],
-						 @"patch_addPadding: Both edges none.");
-	patch_addPadding:patches];
-	STAssertEqualObjects(@"@@ -5,8 +5,12 @@\n XXXX\n+test\n YYYY\n",
-						 patch_toText:patches],
-						 @"patch_addPadding: Both edges none.");
+	mutablePatches = [patch_patchesFromTexts(@"XY", @"XtestY") mutableCopy];
+	STAssertEqualObjects(@"@@ -1,2 +1,6 @@\n X\n+test\n Y\n", patch_patchesToText(mutablePatches), @"patch_addPadding: Both edges partial.");
+	patch_addPaddingToPatches(&mutablePatches, properties);
+	STAssertEqualObjects(@"@@ -2,8 +2,12 @@\n %02%03%04X\n+test\n Y%01%02%03\n", patch_patchesToText(mutablePatches), @"patch_addPadding: Both edges partial.");
+	
+	mutablePatches = [patch_patchesFromTexts(@"XXXXYYYY", @"XXXXtestYYYY") mutableCopy];
+	STAssertEqualObjects(@"@@ -1,8 +1,12 @@\n XXXX\n+test\n YYYY\n", patch_patchesToText(mutablePatches), @"patch_addPadding: Both edges none.");
+	patch_addPaddingToPatches(&mutablePatches, properties);
+	STAssertEqualObjects(@"@@ -5,8 +5,12 @@\n XXXX\n+test\n YYYY\n", patch_patchesToText(mutablePatches), @"patch_addPadding: Both edges none.");
 }
 
-- (void)test_patch_applyTest {
-	DiffMatchPatch *dmp = [DMDiffMatchPatch new];
+
+- (void)test_patch_applyTest
+{
+	PatchProperties properties = patch_defaultPatchProperties();
+	properties.matchProperties.matchDistance = 1000;
+	properties.matchProperties.matchThreshold = 0.5f;
+	properties.patchDeleteThreshold = 0.5f;
+
+	NSArray *patches = patch_patchesFromTexts(@"", @"");
+	NSArray *resultOfApplyingPatches = patch_applyPatchesToText(patches, @"Hello world.");
+	NSString *resultString = [NSString stringWithFormat:@"%@\t%lu", [resultOfApplyingPatches objectAtIndex:0], [[resultOfApplyingPatches objectAtIndex:1] count]];
+	STAssertEqualObjects(@"Hello world.\t0", resultString, @"patch_apply: Null case.");
 	
-	dmp.Match_Distance = 1000;
-	dmp.Match_Threshold = 0.5f;
-	dmp.Patch_DeleteThreshold = 0.5f;
-	NSMutableArray *patches;
-	patches = patch_makeFromOldString:@"" andNewString:@""];
-	NSArray *results = patch_apply:patches toString:@"Hello world."];
-	NSMutableArray *boolArray = [results objectAtIndex:1];
-	NSString *resultStr = [NSString stringWithFormat:@"%@\t%lu", [results objectAtIndex:0], (unsigned long)boolArray.count];
-	STAssertEqualObjects(@"Hello world.\t0", resultStr, @"patch_apply: Null case.");
 	
-	patches = patch_makeFromOldString:@"The quick brown fox jumps over the lazy dog." andNewString:@"That quick brown fox jumped over a lazy dog."];
-	results = patch_apply:patches toString:@"The quick brown fox jumps over the lazy dog."];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-	STAssertEqualObjects(@"That quick brown fox jumped over a lazy dog.\ttrue\ttrue", resultStr, @"patch_apply: Exact match.");
-	
-	results = patch_apply:patches toString:@"The quick red rabbit jumps over the tired tiger."];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-	STAssertEqualObjects(@"That quick red rabbit jumped over a tired tiger.\ttrue\ttrue", resultStr, @"patch_apply: Partial match.");
-	
-	results = patch_apply:patches toString:@"I am the very model of a modern major general."];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-	STAssertEqualObjects(@"I am the very model of a modern major general.\tfalse\tfalse", resultStr, @"patch_apply: Failed match.");
-	
-	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
-	results = patch_apply:patches toString:@"x123456789012345678901234567890-----++++++++++-----123456789012345678901234567890y"];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-	STAssertEqualObjects(@"xabcy\ttrue\ttrue", resultStr, @"patch_apply: Big delete, small change.");
-	
-	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
-	results = patch_apply:patches toString:@"x12345678901234567890---------------++++++++++---------------12345678901234567890y"];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-	STAssertEqualObjects(@"xabc12345678901234567890---------------++++++++++---------------12345678901234567890y\tfalse\ttrue", resultStr, @"patch_apply: Big delete, big change 1.");
-	
-	dmp.Patch_DeleteThreshold = 0.6f;
-	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
-	results = patch_apply:patches toString:@"x12345678901234567890---------------++++++++++---------------12345678901234567890y"];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-	STAssertEqualObjects(@"xabcy\ttrue\ttrue", resultStr, @"patch_apply: Big delete, big change 2.");
-	dmp.Patch_DeleteThreshold = 0.5f;
-	
-	dmp.Match_Threshold = 0.0f;
-	dmp.Match_Distance = 0;
-	patches = patch_makeFromOldString:@"abcdefghijklmnopqrstuvwxyz--------------------1234567890" andNewString:@"abcXXXXXXXXXXdefghijklmnopqrstuvwxyz--------------------1234567YYYYYYYYYY890"];
-	results = patch_apply:patches toString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567890"];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-	STAssertEqualObjects(@"ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567YYYYYYYYYY890\tfalse\ttrue", resultStr, @"patch_apply: Compensate for failed patch.");
-	dmp.Match_Threshold = 0.5f;
-	dmp.Match_Distance = 1000;
-	
-	patches = patch_makeFromOldString:@"" andNewString:@"test"];
-	NSString *patchStr = patch_toText:patches];
-	patch_apply:patches toString:@""];
-	STAssertEqualObjects(patchStr, patch_toText:patches], @"patch_apply: No side effects.");
-	
-	patches = patch_makeFromOldString:@"The quick brown fox jumps over the lazy dog." andNewString:@"Woof"];
-	patchStr = patch_toText:patches];
-	patch_apply:patches toString:@"The quick brown fox jumps over the lazy dog."];
-	STAssertEqualObjects(patchStr, patch_toText:patches], @"patch_apply: No side effects with major delete.");
-	
-	patches = patch_makeFromOldString:@"" andNewString:@"test"];
-	results = patch_apply:patches toString:@""];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
-	STAssertEqualObjects(@"test\ttrue", resultStr, @"patch_apply: Edge exact match.");
-	
-	patches = patch_makeFromOldString:@"XY" andNewString:@"XtestY"];
-	results = patch_apply:patches toString:@"XY"];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
-	STAssertEqualObjects(@"XtestY\ttrue", resultStr, @"patch_apply: Near edge exact match.");
-	
-	patches = patch_makeFromOldString:@"y" andNewString:@"y123"];
-	results = patch_apply:patches toString:@"x"];
-	boolArray = [results objectAtIndex:1];
-	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
-	STAssertEqualObjects(@"x123\ttrue", resultStr, @"patch_apply: Edge partial match.");
+//	patches = patch_patchesFromTexts(@"The quick brown fox jumps over the lazy dog.", @"That quick brown fox jumped over a lazy dog.");
+//	resultOfApplyingPatches = patch_applyPatchesToTextWithProperties(patches, @"The quick brown fox jumps over the lazy dog.", properties);
+//	NSArray *boolArray = [resultOfApplyingPatches objectAtIndex:1];
+//	
+//	resultString = [NSString stringWithFormat:@"%@\t%@\t%@",
+//						[resultOfApplyingPatches objectAtIndex:0],
+//						[boolArray objectAtIndex:0] ? @"true" : @"false",
+//						[boolArray objectAtIndex:1] ? @"true" : @"false"];
+//	STAssertEqualObjects(@"That quick brown fox jumped over a lazy dog.\ttrue\ttrue", resultString, @"patch_apply: Exact match.");
+//
+
+//	patches = patch_makeFromOldString:@"The quick brown fox jumps over the lazy dog." andNewString:@"That quick brown fox jumped over a lazy dog."];
+//	results = patch_apply:patches toString:@"The quick brown fox jumps over the lazy dog."];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
+//	STAssertEqualObjects(@"That quick brown fox jumped over a lazy dog.\ttrue\ttrue", resultStr, @"patch_apply: Exact match.");
+//	
+//	results = patch_apply:patches toString:@"The quick red rabbit jumps over the tired tiger."];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
+//	STAssertEqualObjects(@"That quick red rabbit jumped over a tired tiger.\ttrue\ttrue", resultStr, @"patch_apply: Partial match.");
+//	
+//	results = patch_apply:patches toString:@"I am the very model of a modern major general."];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
+//	STAssertEqualObjects(@"I am the very model of a modern major general.\tfalse\tfalse", resultStr, @"patch_apply: Failed match.");
+//	
+//	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
+//	results = patch_apply:patches toString:@"x123456789012345678901234567890-----++++++++++-----123456789012345678901234567890y"];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
+//	STAssertEqualObjects(@"xabcy\ttrue\ttrue", resultStr, @"patch_apply: Big delete, small change.");
+//	
+//	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
+//	results = patch_apply:patches toString:@"x12345678901234567890---------------++++++++++---------------12345678901234567890y"];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
+//	STAssertEqualObjects(@"xabc12345678901234567890---------------++++++++++---------------12345678901234567890y\tfalse\ttrue", resultStr, @"patch_apply: Big delete, big change 1.");
+//	
+//	dmp.Patch_DeleteThreshold = 0.6f;
+//	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
+//	results = patch_apply:patches toString:@"x12345678901234567890---------------++++++++++---------------12345678901234567890y"];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
+//	STAssertEqualObjects(@"xabcy\ttrue\ttrue", resultStr, @"patch_apply: Big delete, big change 2.");
+//	dmp.Patch_DeleteThreshold = 0.5f;
+//	
+//	dmp.Match_Threshold = 0.0f;
+//	dmp.Match_Distance = 0;
+//	patches = patch_makeFromOldString:@"abcdefghijklmnopqrstuvwxyz--------------------1234567890" andNewString:@"abcXXXXXXXXXXdefghijklmnopqrstuvwxyz--------------------1234567YYYYYYYYYY890"];
+//	results = patch_apply:patches toString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567890"];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
+//	STAssertEqualObjects(@"ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567YYYYYYYYYY890\tfalse\ttrue", resultStr, @"patch_apply: Compensate for failed patch.");
+//	dmp.Match_Threshold = 0.5f;
+//	dmp.Match_Distance = 1000;
+//	
+//	patches = patch_makeFromOldString:@"" andNewString:@"test"];
+//	NSString *patchStr = patch_patchesToText(patches);
+//	patch_apply:patches toString:@""];
+//	STAssertEqualObjects(patchStr, patch_patchesToText(patches), @"patch_apply: No side effects.");
+//	
+//	patches = patch_makeFromOldString:@"The quick brown fox jumps over the lazy dog." andNewString:@"Woof"];
+//	patchStr = patch_patchesToText(patches);
+//	patch_apply:patches toString:@"The quick brown fox jumps over the lazy dog."];
+//	STAssertEqualObjects(patchStr, patch_patchesToText(patches), @"patch_apply: No side effects with major delete.");
+//	
+//	patches = patch_makeFromOldString:@"" andNewString:@"test"];
+//	results = patch_apply:patches toString:@""];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
+//	STAssertEqualObjects(@"test\ttrue", resultStr, @"patch_apply: Edge exact match.");
+//	
+//	patches = patch_makeFromOldString:@"XY" andNewString:@"XtestY"];
+//	results = patch_apply:patches toString:@"XY"];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
+//	STAssertEqualObjects(@"XtestY\ttrue", resultStr, @"patch_apply: Near edge exact match.");
+//	
+//	patches = patch_makeFromOldString:@"y" andNewString:@"y123"];
+//	results = patch_apply:patches toString:@"x"];
+//	boolArray = [results objectAtIndex:1];
+//	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
+//	STAssertEqualObjects(@"x123\ttrue", resultStr, @"patch_apply: Edge partial match.");
 }
-*/
 
 
 #pragma mark Test Utility Functions

@@ -101,9 +101,10 @@ double match_bitapScoreForErrorCount(NSUInteger e, NSUInteger x, NSUInteger near
 
 
 // Internal functions for patching
-NSMutableArray *patch_patchesFromStringsWithProperties(NSString *text1, NSString *text2, PatchProperties properties);
-NSMutableArray *patch_patchesFromDiffs(NSArray *diffs, PatchProperties properties);
-NSMutableArray *patch_patchesFromStringAndDiffs(NSString *text1, NSArray *diffs, PatchProperties properties);
+NSArray *patch_patchesFromTextsWithProperties(NSString *text1, NSString *text2, PatchProperties properties);
+NSArray *patch_patchesFromDiffs(NSArray *diffs, PatchProperties properties);
+NSArray *patch_patchesFromTextAndDiffs(NSString *text1, NSArray *diffs, PatchProperties properties);
+NSArray *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString *text, PatchProperties properties);
 
 NSString *patch_addPaddingToPatches(NSMutableArray **patches, PatchProperties properties);
 void patch_splitMax(NSMutableArray **patches, PatchProperties properties);

@@ -1765,10 +1765,10 @@ NSMutableDictionary *match_alphabetFromPattern(NSString *pattern)
 #pragma mark Patch Functions
 
 
-NSArray *patch_patchesFromStrings(NSString *text1, NSString *text2)
+NSArray *patch_patchesFromTexts(NSString *text1, NSString *text2)
 {
 	PatchProperties properties = patch_defaultPatchProperties();
-	return (NSArray *)patch_patchesFromStringsWithProperties(text1, text2, properties);
+	return patch_patchesFromTextsWithProperties(text1, text2, properties);
 }
 
 
@@ -1780,7 +1780,7 @@ NSArray *patch_patchesFromStrings(NSString *text1, NSString *text2)
  * @return NSMutableArray of Patch objects.
  */
 
-NSMutableArray *patch_patchesFromStringsWithProperties(NSString *text1, NSString *text2, PatchProperties properties)
+NSArray *patch_patchesFromTextsWithProperties(NSString *text1, NSString *text2, PatchProperties properties)
 {
 	// Check for null inputs.
 	if(text1 == nil || text2 == nil) {
@@ -1796,7 +1796,7 @@ NSMutableArray *patch_patchesFromStringsWithProperties(NSString *text1, NSString
 		patch_cleanupDiffsForEfficiency(&diffs, properties);
 	}
 	
-	return patch_patchesFromStringAndDiffs(text1, diffs, properties);
+	return patch_patchesFromTextAndDiffs(text1, diffs, properties);
 }
 
 
@@ -1807,11 +1807,11 @@ NSMutableArray *patch_patchesFromStringsWithProperties(NSString *text1, NSString
  * @param diffs NSMutableArray of Diff objects for text1 to text2.
  * @return NSMutableArray of Patch objects.
  */
- NSMutableArray *patch_patchesFromDiffs(NSArray *diffs, PatchProperties properties)
+ NSArray *patch_patchesFromDiffs(NSArray *diffs, PatchProperties properties)
 {
 	// Check for nil inputs not needed since nil can't be passed in C#.
 	// No origin NSString *provided, comAdde our own.
-	return  patch_patchesFromStringAndDiffs(diff_text1(diffs), diffs, properties);
+	return  patch_patchesFromTextAndDiffs(diff_text1(diffs), diffs, properties);
 }
 
 
@@ -1823,7 +1823,7 @@ NSMutableArray *patch_patchesFromStringsWithProperties(NSString *text1, NSString
  * @param diffs NSMutableArray of Diff objects for text1 to text2.
  * @return NSMutableArray of Patch objects.
  */
-NSMutableArray *patch_patchesFromStringAndDiffs(NSString *text1, NSArray *diffs, PatchProperties properties)
+NSArray *patch_patchesFromTextAndDiffs(NSString *text1, NSArray *diffs, PatchProperties properties)
 {
 	// Check for null inputs.
 	if(text1 == nil) {
@@ -1834,15 +1834,16 @@ NSMutableArray *patch_patchesFromStringAndDiffs(NSString *text1, NSArray *diffs,
 	NSMutableArray *patches = [NSMutableArray array];
 	
 	if(diffs.count == 0) {
-		return patches;                                                                                                                                                                                         // Get rid of the nil case.
+		return patches;					// Get rid of the nil case.
 	}
 	
 	DMPatch *patch = [DMPatch new];
-	NSUInteger char_count1 = 0;                                                                                                                                                                 // Number of characters into the text1 NSString.
-	NSUInteger char_count2 = 0;                                                                                                                                                                 // Number of characters into the text2 NSString.
-																																																// Start with text1 (prepatch_text) and apply the diffs until we arrive at
-																																																// text2 (postpatch_text). We recreate the patches one by one to determine
-																																																// context info.
+	NSUInteger char_count1 = 0;		// Number of characters into the text1 NSString.
+	NSUInteger char_count2 = 0;		// Number of characters into the text2 NSString.
+									// Start with text1 (prepatch_text) and apply the diffs until we arrive at
+									// text2 (postpatch_text). We recreate the patches one by one to determine
+									// context info.
+	
 	NSString *prepatch_text = text1;
 	NSMutableString *postpatch_text = [text1 mutableCopy];
 	
@@ -1913,6 +1914,12 @@ NSMutableArray *patch_patchesFromStringAndDiffs(NSString *text1, NSArray *diffs,
 }
 
 
+NSArray *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text)
+{
+	PatchProperties properties = patch_defaultPatchProperties();
+	return patch_applyPatchesToTextWithProperties(sourcePatches, text, properties);
+}
+
 /**
  * Merge a set of patches onto the text.  Return a patched text, as well
  * as an array of YES/NO values indicating which patches were applied.
@@ -1921,7 +1928,7 @@ NSMutableArray *patch_patchesFromStringAndDiffs(NSString *text1, NSArray *diffs,
  * @return Two element NSArray, containing the new text and an array of
  *      BOOL values.
  */
-NSArray *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text, PatchProperties properties)
+NSArray *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString *text, PatchProperties properties)
 {
 	if(sourcePatches.count == 0) {
 		return @[text, [NSMutableArray array]];
@@ -2129,7 +2136,7 @@ void patch_splitMax(NSMutableArray **patches, PatchProperties properties)
 	NSUInteger numberOfPatches = [*patches count];
 	
 	for(NSUInteger x = 0; x < numberOfPatches; x++) {
-		if(((DMPatch *)patches[x]).length1 <= patch_size) {
+		if([(DMPatch *)[*patches objectAtIndex:x] length1] <= patch_size) {
 			continue;
 		}
 		
@@ -2199,8 +2206,7 @@ void patch_splitMax(NSMutableArray **patches, PatchProperties properties)
 						 removeObjectAtIndex:0];
 					} else {
 						DMDiff *firstDiff = (bigpatch.diffs)[0];
-						firstDiff.text = [firstDiff.text
-										  substringFromIndex:diff_text.length];
+						firstDiff.text = [firstDiff.text substringFromIndex:diff_text.length];
 					}
 				}
 			}
