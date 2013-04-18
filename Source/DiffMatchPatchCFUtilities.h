@@ -44,11 +44,6 @@ CF_INLINE CFStringRef diff_CFStringCreateSubstringWithStartIndex(CFStringRef tex
 	return diff_CFStringCreateSubstring(text, start_index, (CFStringGetLength(text) - start_index) );
 }
 
-CF_INLINE CFStringRef diff_CFStringCreateJavaSubstring(CFStringRef s, CFIndex begin, CFIndex end)
-{
-	return diff_CFStringCreateSubstring(s, begin, end - begin);
-}
-
 
 CF_INLINE void diff_CFStringPrepareUniCharBuffer(CFStringRef string, const UniChar **string_chars, UniChar **string_buffer, CFRange string_range)
 {

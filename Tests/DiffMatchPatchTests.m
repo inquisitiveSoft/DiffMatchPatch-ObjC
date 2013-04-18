@@ -1598,95 +1598,84 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 - (void)test_patch_applyTest
 {
 	PatchProperties properties = patch_defaultPatchProperties();
-//	properties.matchProperties.matchDistance = 1000;
-//	properties.matchProperties.matchThreshold = 0.5f;
-//	properties.patchDeleteThreshold = 0.5f;
+	properties.matchProperties.matchDistance = 1000;
+	properties.matchProperties.matchThreshold = 0.5f;
+	properties.patchDeleteThreshold = 0.5f;
 
 	NSIndexSet *indexesOfAppliedPatches = nil;
-	NSArray *patches = patch_patchesFromTexts(@"", @"");
+	NSArray *patches = patch_patchesFromTextsWithProperties(@"", @"", properties);
 	NSString *resultString = patch_applyPatchesToTextWithProperties(patches, @"Hello world.", &indexesOfAppliedPatches, properties);
 	resultString = [resultString stringByAppendingFormat:@"\t%ld", [indexesOfAppliedPatches count]];
 	STAssertEqualObjects(@"Hello world.\t0", resultString, @"patch_apply: Null case.");
 	
 	
-	
-	
-	patches = patch_patchesFromTexts(@"The quick brown fox jumps over the lazy dog.", @"That quick brown fox jumped over a lazy dog.");
+	patches = patch_patchesFromTextsWithProperties(@"The quick brown fox jumps over the lazy dog.", @"That quick brown fox jumped over a lazy dog.", properties);
 	NSLog(@"patches: %@", patches);
 	resultString = patch_applyPatchesToTextWithProperties(patches, @"The quick brown fox jumps over the lazy dog.", &indexesOfAppliedPatches, properties);
 	
 	STAssertTrue([indexesOfAppliedPatches containsIndexesInRange:NSMakeRange(0, 2)], @"patch_apply: Exact match. Correct indices");
 	STAssertEqualObjects(@"That quick brown fox jumped over a lazy dog.", resultString, @"patch_apply: Exact match. Text");
 	
+	resultString = patch_applyPatchesToTextWithProperties(patches, @"The quick red rabbit jumps over the tired tiger.", &indexesOfAppliedPatches, properties);
+	STAssertTrue([indexesOfAppliedPatches containsIndexesInRange:NSMakeRange(0, 2)], @"patch_apply: Partial match");
+	STAssertEqualObjects(@"That quick red rabbit jumped over a tired tiger.", resultString, @"patch_apply: Partial match.");
 	
-//	applyResult = patch_applyPatchesToTextWithProperties(patches, @"The quick red rabbit jumps over the tired tiger.", properties);
+	resultString = patch_applyPatchesToTextWithProperties(patches, @"I am the very model of a modern major general.", &indexesOfAppliedPatches, properties);
+	STAssertFalse([indexesOfAppliedPatches containsIndex:0] && [indexesOfAppliedPatches containsIndex:1], @"patch_apply: Failed match");
+	STAssertEqualObjects(@"I am the very model of a modern major general.", resultString, @"patch_apply: Failed match.");
 	
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-//	STAssertEqualObjects(@"That quick red rabbit jumped over a tired tiger.\ttrue\ttrue", resultStr, @"patch_apply: Partial match.");
-//	
-//	results = patch_apply:patches toString:@"I am the very model of a modern major general."];
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-//	STAssertEqualObjects(@"I am the very model of a modern major general.\tfalse\tfalse", resultStr, @"patch_apply: Failed match.");
-//	
-//	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
-//	results = patch_apply:patches toString:@"x123456789012345678901234567890-----++++++++++-----123456789012345678901234567890y"];
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-//	STAssertEqualObjects(@"xabcy\ttrue\ttrue", resultStr, @"patch_apply: Big delete, small change.");
-//	
-//	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
-//	results = patch_apply:patches toString:@"x12345678901234567890---------------++++++++++---------------12345678901234567890y"];
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-//	STAssertEqualObjects(@"xabc12345678901234567890---------------++++++++++---------------12345678901234567890y\tfalse\ttrue", resultStr, @"patch_apply: Big delete, big change 1.");
-//	
-//	dmp.Patch_DeleteThreshold = 0.6f;
-//	patches = patch_makeFromOldString:@"x1234567890123456789012345678901234567890123456789012345678901234567890y" andNewString:@"xabcy"];
-//	results = patch_apply:patches toString:@"x12345678901234567890---------------++++++++++---------------12345678901234567890y"];
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-//	STAssertEqualObjects(@"xabcy\ttrue\ttrue", resultStr, @"patch_apply: Big delete, big change 2.");
-//	dmp.Patch_DeleteThreshold = 0.5f;
-//	
-//	dmp.Match_Threshold = 0.0f;
-//	dmp.Match_Distance = 0;
-//	patches = patch_makeFromOldString:@"abcdefghijklmnopqrstuvwxyz--------------------1234567890" andNewString:@"abcXXXXXXXXXXdefghijklmnopqrstuvwxyz--------------------1234567YYYYYYYYYY890"];
-//	results = patch_apply:patches toString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567890"];
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0]), stringForBOOL([boolArray objectAtIndex:1])];
-//	STAssertEqualObjects(@"ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567YYYYYYYYYY890\tfalse\ttrue", resultStr, @"patch_apply: Compensate for failed patch.");
-//	dmp.Match_Threshold = 0.5f;
-//	dmp.Match_Distance = 1000;
-//	
-//	patches = patch_makeFromOldString:@"" andNewString:@"test"];
-//	NSString *patchStr = patch_patchesToText(patches);
-//	patch_apply:patches toString:@""];
-//	STAssertEqualObjects(patchStr, patch_patchesToText(patches), @"patch_apply: No side effects.");
-//	
-//	patches = patch_makeFromOldString:@"The quick brown fox jumps over the lazy dog." andNewString:@"Woof"];
-//	patchStr = patch_patchesToText(patches);
-//	patch_apply:patches toString:@"The quick brown fox jumps over the lazy dog."];
-//	STAssertEqualObjects(patchStr, patch_patchesToText(patches), @"patch_apply: No side effects with major delete.");
-//	
-//	patches = patch_makeFromOldString:@"" andNewString:@"test"];
-//	results = patch_apply:patches toString:@""];
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
-//	STAssertEqualObjects(@"test\ttrue", resultStr, @"patch_apply: Edge exact match.");
-//	
-//	patches = patch_makeFromOldString:@"XY" andNewString:@"XtestY"];
-//	results = patch_apply:patches toString:@"XY"];
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
-//	STAssertEqualObjects(@"XtestY\ttrue", resultStr, @"patch_apply: Near edge exact match.");
-//	
-//	patches = patch_makeFromOldString:@"y" andNewString:@"y123"];
-//	results = patch_apply:patches toString:@"x"];
-//	boolArray = [results objectAtIndex:1];
-//	resultStr = [NSString stringWithFormat:@"%@\t%@", [results objectAtIndex:0], stringForBOOL([boolArray objectAtIndex:0])];
-//	STAssertEqualObjects(@"x123\ttrue", resultStr, @"patch_apply: Edge partial match.");
+	patches = patch_patchesFromTextsWithProperties(@"x1234567890123456789012345678901234567890123456789012345678901234567890y", @"xabcy", properties);
+	resultString = patch_applyPatchesToTextWithProperties(patches, @"x123456789012345678901234567890-----++++++++++-----123456789012345678901234567890y", &indexesOfAppliedPatches, properties);
+	STAssertTrue([indexesOfAppliedPatches containsIndexesInRange:NSMakeRange(0, 2)], @"patch_apply: Big delete, small change");
+	STAssertEqualObjects(@"xabcy", resultString, @"patch_apply: Big delete, small change.");
+	
+	patches = patch_patchesFromTextsWithProperties(@"x1234567890123456789012345678901234567890123456789012345678901234567890y", @"xabcy", properties);
+	resultString = patch_applyPatchesToTextWithProperties(patches, @"x12345678901234567890---------------++++++++++---------------12345678901234567890y", &indexesOfAppliedPatches, properties);
+	STAssertTrue([indexesOfAppliedPatches count] == 1 && [indexesOfAppliedPatches containsIndex:1], @"patch_apply: Big delete, big change 1.");
+	STAssertEqualObjects(@"xabc12345678901234567890---------------++++++++++---------------12345678901234567890y", resultString, @"patch_apply: Big delete, big change 1.");
+	
+	properties.patchDeleteThreshold = 0.6f;
+	patches = patch_patchesFromTextsWithProperties(@"x1234567890123456789012345678901234567890123456789012345678901234567890y", @"xabcy", properties);
+	resultString = patch_applyPatchesToTextWithProperties(patches, @"x12345678901234567890---------------++++++++++---------------12345678901234567890y", &indexesOfAppliedPatches, properties);
+	STAssertTrue([indexesOfAppliedPatches containsIndexesInRange:NSMakeRange(0, 2)], @"patch_apply: Big delete, big change 2.");
+	STAssertEqualObjects(@"xabcy", resultString, @"patch_apply: Big delete, big change 2.");
+	
+	properties.patchDeleteThreshold = 0.5f;
+	properties.matchProperties.matchThreshold = 0.0f;
+	properties.matchProperties.matchDistance = 0;
+
+	patches = patch_patchesFromTextsWithProperties(@"abcdefghijklmnopqrstuvwxyz--------------------1234567890", @"abcXXXXXXXXXXdefghijklmnopqrstuvwxyz--------------------1234567YYYYYYYYYY890", properties);
+	resultString = patch_applyPatchesToTextWithProperties(patches, @"ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567890", &indexesOfAppliedPatches, properties);
+	STAssertTrue([indexesOfAppliedPatches count] == 1 && [indexesOfAppliedPatches containsIndex:1], @"patch_apply: Compensate for failed patch..");
+	STAssertEqualObjects(@"ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567YYYYYYYYYY890", resultString, @"patch_apply: Compensate for failed patch.");
+	
+	properties.matchProperties.matchThreshold = 0.5f;
+	properties.matchProperties.matchDistance = 1000;
+	
+	patches = patch_patchesFromTextsWithProperties(@"", @"test", properties);
+	NSString *patchesAsText = patch_patchesToText(patches);
+	resultString = patch_applyPatchesToText(patches, @"", NULL);
+	STAssertEqualObjects(patchesAsText, patch_patchesToText(patches), @"patch_apply: No side effects.");
+	
+	patches = patch_patchesFromTexts(@"The quick brown fox jumps over the lazy dog.", @"Woof");
+	patchesAsText = patch_patchesToText(patches);
+	resultString = patch_applyPatchesToText(patches, @"The quick brown fox jumps over the lazy dog.", NULL);
+	STAssertEqualObjects(patchesAsText, patch_patchesToText(patches), @"patch_apply: No side effects with major delete.");
+	
+	patches = patch_patchesFromTexts(@"", @"test");
+	resultString = patch_applyPatchesToText(patches, @"", &indexesOfAppliedPatches);
+	STAssertTrue([indexesOfAppliedPatches count] == 1 && [indexesOfAppliedPatches containsIndex:0], @"patch_apply: Edge exact match.");
+	STAssertEqualObjects(@"test", resultString, @"patch_apply: Edge exact match.");
+	
+	patches = patch_patchesFromTexts(@"XY", @"XtestY");
+	resultString = patch_applyPatchesToText(patches, @"XY", &indexesOfAppliedPatches);
+	STAssertTrue([indexesOfAppliedPatches count] == 1 && [indexesOfAppliedPatches containsIndex:0], @"patch_apply: Near edge exact match.");
+	STAssertEqualObjects(@"XtestY", resultString, @"patch_apply: Near edge exact match.");
+	
+	patches = patch_patchesFromTexts(@"y", @"y123");
+	resultString = patch_applyPatchesToText(patches, @"x", &indexesOfAppliedPatches);
+	STAssertTrue([indexesOfAppliedPatches count] == 1 && [indexesOfAppliedPatches containsIndex:0], @"patch_apply: Edge partial match.");
+	STAssertEqualObjects(@"x123", resultString, @"patch_apply: Edge partial match.");
 }
 
 

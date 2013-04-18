@@ -123,21 +123,29 @@
 		!= [text rangeOfString:pattern options:(NSLiteralSearch | NSBackwardsSearch)].location
 			&& pattern.length < (maximumBits - patchMargin - patchMargin)) {
 		padding += patchMargin;
-		pattern = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, MAX_OF_CONST_AND_DIFF(0, self.start2, padding), MIN(text.length, self.start2 + self.length1 + padding));
+		
+		NSRange patternRange = NSMakeRange(MAX_OF_CONST_AND_DIFF(0, self.start2, padding), MIN(text.length, self.start2 + self.length1 + padding));
+		patternRange.length -= patternRange.location;
+		pattern = [text substringWithRange:patternRange];
 	}
 	
 	// Add one chunk for good luck.
 	padding += patchMargin;
 	
 	// Add the prefix.
-	NSString *prefix = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, MAX_OF_CONST_AND_DIFF(0, self.start2, padding), self.start2);
+	NSRange prefixRange = NSMakeRange(MAX_OF_CONST_AND_DIFF(0, self.start2, padding), 0);
+	prefixRange.length = self.start2 - prefixRange.location;
+	NSString *prefix = [text substringWithRange:prefixRange];
 	
 	if(prefix.length != 0) {
 		[self.diffs insertObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:prefix] atIndex:0];
 	}
 	
+	
 	// Add the suffix.
-	NSString *suffix = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, (self.start2 + self.length1), MIN(text.length, self.start2 + self.length1 + padding));
+	NSRange suffixRange = NSMakeRange((self.start2 + self.length1), MIN(text.length - self.start2 - self.length1, padding));
+	NSString *suffix = [text substringWithRange:suffixRange];
+	
 	if(suffix.length != 0) {
 		[self.diffs addObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:suffix]];
 	}

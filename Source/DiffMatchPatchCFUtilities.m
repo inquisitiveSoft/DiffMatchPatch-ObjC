@@ -458,7 +458,7 @@ CFStringRef diff_linesToCharsMungeCFStringCreate(CFStringRef text, CFMutableArra
 		   lineEnd = lineEndRange.location;
 		}*/
 
-		line = diff_CFStringCreateJavaSubstring(text, lineStart, lineEnd + 1);
+		line = diff_CFStringCreateSubstring(text, lineStart, lineEnd + 1 - lineStart);
 		lineStart = lineEnd + 1;
 
 		diff_mungeHelper(line, lineArray, lineHash, chars);

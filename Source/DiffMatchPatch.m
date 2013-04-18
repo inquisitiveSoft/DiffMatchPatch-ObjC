@@ -1946,7 +1946,6 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
 	[mutableText appendString:nullPadding];
 	patch_splitMax(&patches, properties);
 	
-	NSUInteger patchIndex = 0;
 	// delta keeps track of the offset between the expected and actual
 	// location of the previous patch.  If there are patches expected at
 	// positions 10 and 20, but the first patch was found at 12, delta is 2
@@ -1955,21 +1954,22 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
 	NSUInteger maxBits = properties.matchProperties.matchMaximumBits;
 	
 	NSMutableIndexSet *appliedPatches = [[NSMutableIndexSet alloc] init];
+	NSUInteger patchIndex = 0;
 	
 	for(DMPatch *currentPatch in patches) {
 		NSUInteger expected_loc = currentPatch.start2 + delta;
 		NSString *text1 = diff_text1(currentPatch.diffs);
 		NSUInteger start_loc;
-		NSUInteger end_loc = NSNotFound;
+		NSUInteger endLocation = NSNotFound;
 		if (text1.length > maxBits) {
 			// patch_splitMax will only provide an oversized pattern
 			// in the case of a monster delete.
 			
 			start_loc = match_locationOfMatchInText(mutableText, [text1 substringWithRange:NSMakeRange(0, maxBits)], expected_loc);
 			if(start_loc != NSNotFound) {
-				end_loc = match_locationOfMatchInText(mutableText, [text1 substringFromIndex:text1.length - maxBits], (expected_loc + text1.length - maxBits));
+				endLocation = match_locationOfMatchInText(mutableText, [text1 substringFromIndex:text1.length - maxBits], (expected_loc + text1.length - maxBits));
 				
-				if(end_loc == NSNotFound || start_loc >= end_loc) {
+				if(endLocation == NSNotFound || start_loc >= endLocation) {
 					// Can't find valid trailing context.   Drop this patch.
 					start_loc = NSNotFound;
 				}
@@ -1991,10 +1991,10 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
 			
 			NSString *text2 = nil;
 			
-			if(end_loc == NSNotFound) {
+			if(endLocation == NSNotFound) {
 				text2 = [mutableText substringWithRange:NSMakeRange(start_loc, MIN(text1.length, mutableText.length))];
 			} else {
-				text2 = [mutableText substringWithRange:NSMakeRange(start_loc, MIN(end_loc + maxBits, mutableText.length))];
+				text2 = [mutableText substringWithRange:NSMakeRange(start_loc, MIN(endLocation + maxBits, mutableText.length))];
 			}
 			
 			if(text1 == text2) {
