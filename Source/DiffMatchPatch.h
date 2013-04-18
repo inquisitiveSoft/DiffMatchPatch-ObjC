@@ -103,7 +103,7 @@ NSUInteger match_locationOfMatchInTextWithOptions(NSString *text, NSString *patt
 NSArray *patch_patchesFromTexts(NSString *text1, NSString *text2);
 NSString *patch_patchesToText(NSArray *patches);
 
-NSArray *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text);
+NSString *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text, NSIndexSet **indexesOfAppliedPatches);
 
 NSMutableArray *patch_parsePatchesFromText(NSString *textline, NSError **error);
 

@@ -11,5 +11,6 @@
 @property (nonatomic, assign) NSUInteger length2;
 
 - (void)addContext:(NSString *)text withMargin:(NSInteger)patchMargin maximumBits:(NSUInteger)maximumBits;
+- (NSString *)patchText;
 
 @end

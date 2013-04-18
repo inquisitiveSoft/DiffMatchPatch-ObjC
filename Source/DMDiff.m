@@ -44,22 +44,22 @@
 	
 	switch(self.operation) {
 		case DIFF_DELETE:
-			operationName = @"DIFF_DELETE";
+			operationName = @"DELETE";
 			break;
 			
 		case DIFF_INSERT:
-			operationName = @"DIFF_INSERT";
+			operationName = @"INSERT";
 			break;
 			
 		case DIFF_EQUAL:
-			operationName = @"DIFF_EQUAL";
+			operationName = @"EQUAL";
 			break;
 			
 		default:
 			break;
 	}
 	
-	return [NSString stringWithFormat:@"Diff(%@,\"%@\")", operationName, prettyText];
+	return [NSString stringWithFormat:@"%@ (%@,\"%@\")", [super description], operationName, prettyText];
 }
 
 

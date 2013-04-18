@@ -104,7 +104,7 @@ double match_bitapScoreForErrorCount(NSUInteger e, NSUInteger x, NSUInteger near
 NSArray *patch_patchesFromTextsWithProperties(NSString *text1, NSString *text2, PatchProperties properties);
 NSArray *patch_patchesFromDiffs(NSArray *diffs, PatchProperties properties);
 NSArray *patch_patchesFromTextAndDiffs(NSString *text1, NSArray *diffs, PatchProperties properties);
-NSArray *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString *text, PatchProperties properties);
+NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString *text, NSIndexSet **indexesOfAppliedPatches, PatchProperties properties);
 
 NSString *patch_addPaddingToPatches(NSMutableArray **patches, PatchProperties properties);
 void patch_splitMax(NSMutableArray **patches, PatchProperties properties);

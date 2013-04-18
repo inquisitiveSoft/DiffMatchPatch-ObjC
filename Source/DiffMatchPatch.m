@@ -1914,10 +1914,10 @@ NSArray *patch_patchesFromTextAndDiffs(NSString *text1, NSArray *diffs, PatchPro
 }
 
 
-NSArray *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text)
+NSString *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text, NSIndexSet **indexesOfAppliedPatches)
 {
 	PatchProperties properties = patch_defaultPatchProperties();
-	return patch_applyPatchesToTextWithProperties(sourcePatches, text, properties);
+	return patch_applyPatchesToTextWithProperties(sourcePatches, text, indexesOfAppliedPatches, properties);
 }
 
 /**
@@ -1928,27 +1928,34 @@ NSArray *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text)
  * @return Two element NSArray, containing the new text and an array of
  *      BOOL values.
  */
-NSArray *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString *text, PatchProperties properties)
+NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString *text, NSIndexSet **indexesOfAppliedPatches, PatchProperties properties)
 {
 	if(sourcePatches.count == 0) {
-		return @[text, [NSMutableArray array]];
+		if(indexesOfAppliedPatches != NULL)
+			*indexesOfAppliedPatches = nil;
+		
+		return text;
 	}
+	
 	
 	// Deep copy the patches so that no changes are made to originals.
 	NSMutableArray *patches = [[NSMutableArray alloc] initWithArray:sourcePatches copyItems:YES];
-	NSMutableString *textMutable = [text mutableCopy];
+	NSMutableString *mutableText = [text mutableCopy];
 	
+	// Add padding
 	NSString *nullPadding = patch_addPaddingToPatches(&patches, properties);
-	[textMutable insertString:nullPadding atIndex:0];
-	[textMutable appendString:nullPadding];
+	[mutableText insertString:nullPadding atIndex:0];
+	[mutableText appendString:nullPadding];
 	patch_splitMax(&patches, properties);
 	
-	NSUInteger x = 0;
-	// delta keeps track of the offset between the expected and actual
-	// location of the previous patch.  If there are patches expected at
-	// positions 10 and 20, but the first patch was found at 12, delta is 2 and the second patch has an effective expected position of 22.
+	NSUInteger maxBits = properties.matchProperties.matchMaximumBits;
+	NSUInteger patchIndex = 0;
+	// delta keeps track of the offset between the expected and actual location of the previous patch. 
+	// If there are patches expected at positions 10 and 20, but the first patch was found at 12,
+	// delta is 2 and the second patch has an effective expected position of 22.
 	NSUInteger delta = 0;
-	BOOL *results = (BOOL *)calloc(patches.count, sizeof(BOOL));
+	
+	NSMutableIndexSet *appliedPatches = [[NSMutableIndexSet alloc] init];
 	
 	for(DMPatch *patch in patches) {
 		NSUInteger expected_loc = patch.start2 + delta;
@@ -1956,55 +1963,55 @@ NSArray *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString
 		NSUInteger start_loc;
 		NSUInteger end_loc = NSNotFound;
 		
-		if(text1.length > properties.matchProperties.matchMaximumBits) {
+		if(text1.length > maxBits) {
 			// patch_splitMax will only provide an oversized pattern
 			// in the case of a monster delete.
-			start_loc = match_locationOfMatchInTextWithProperties(textMutable, [text1 substringToIndex:properties.matchProperties.matchMaximumBits], expected_loc, properties.matchProperties);
+			start_loc = match_locationOfMatchInTextWithProperties(mutableText, [text1 substringToIndex:maxBits], expected_loc, properties.matchProperties);
 			
 			if(start_loc != NSNotFound) {
-				end_loc = match_locationOfMatchInTextWithProperties(textMutable, [text1 substringFromIndex:text1.length - properties.matchProperties.matchMaximumBits], (expected_loc + text1.length - properties.matchProperties.matchMaximumBits), properties.matchProperties);
+				end_loc = match_locationOfMatchInTextWithProperties(mutableText, [text1 substringFromIndex:text1.length - maxBits], (expected_loc + text1.length - maxBits), properties.matchProperties);
 				
 				if(end_loc == NSNotFound || start_loc >= end_loc) {
-					// Can't find valid trailing context.   Drop this patch.
+					// Can't find valid trailing context. Drop this patch.
 					start_loc = NSNotFound;
 				}
 			}
 		} else {
-			start_loc = match_locationOfMatchInTextWithProperties(textMutable, text1, expected_loc, properties.matchProperties);
+			start_loc = match_locationOfMatchInTextWithProperties(mutableText, text1, expected_loc, properties.matchProperties);
 		}
 		
 		if(start_loc == NSNotFound) {
 			// No match found.  :(
-			results[x] = NO;
+			[appliedPatches removeIndex:patchIndex];
+			
 			// Subtract the delta for this failed patch from subsequent patches.
 			delta -= patch.length2 - patch.length1;
 		} else {
 			// Found a match.   :)
-			results[x] = YES;
+			[appliedPatches addIndex:patchIndex];
+			
 			delta = start_loc - expected_loc;
-			NSString *text2;
+			NSString *text2 = nil;
 			
 			if(end_loc == NSNotFound) {
-				text2 = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, start_loc, MIN(start_loc + text1.length, textMutable.length));
+				text2 = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, start_loc, MIN(start_loc + text1.length, mutableText.length));
 			} else {
-				text2 = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, start_loc, MIN(end_loc + properties.matchProperties.matchMaximumBits, textMutable.length));
+				text2 = (__bridge_transfer NSString *)diff_CFStringCreateJavaSubstring((__bridge CFStringRef)text, start_loc, MIN(end_loc + maxBits, mutableText.length));
 			}
 			
-			if(text1 == text2) {
-				// Perfect match, just shove the Replacement text in.
-				[textMutable replaceCharactersInRange:NSMakeRange(start_loc, text1.length) withString:diff_text2(patch.diffs)];
+			if([text1 isEqualToString:text2]) {
+				// Perfect match, just shove the replacement text in.
+				[mutableText replaceCharactersInRange:NSMakeRange(start_loc, text1.length) withString:diff_text2(patch.diffs)];
 			} else {
-				// Imperfect match.   Run a diff to get a framework of equivalent
-				// indices.
+				// Imperfect match. Run a diff to get a framework of equivalent indices.
 				DiffProperties diffProperties = properties.diffProperties;
 				diffProperties.checkLines = FALSE;
 				
 				NSMutableArray *diffs = diff_diffsBetweenTextsWithProperties(text1, text2, diffProperties);
 				
-				if(text1.length > properties.matchProperties.matchMaximumBits
-				   && (diff_levenshtein(diffs) / (float)text1.length) > properties.patchDeleteThreshold) {
+				if(text1.length > maxBits && (diff_levenshtein(diffs) / text1.length) > properties.patchDeleteThreshold) {
 					// The end points match, but the content is unacceptably bad.
-					results[x] = NO;
+					[appliedPatches removeIndex:patchIndex];
 				} else {
 					diff_cleanupSemanticLossless(&diffs);
 					
@@ -2016,11 +2023,11 @@ NSArray *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString
 							
 							if(diff.operation == DIFF_INSERT) {
 								// Insertion
-								[textMutable insertString:diff.text atIndex:(start_loc + index2)];
+								[mutableText insertString:diff.text atIndex:(start_loc + index2)];
 							} else if(diff.operation == DIFF_DELETE) {
 								// Deletion
-								NSInteger translationBetweenDiffs = diff_translateLocationFromText1ToText2(diffs, (index1 + diff.text.length));
-								[textMutable deleteCharactersInRange:NSMakeRange(start_loc + index2, translationBetweenDiffs - index2)];
+								NSInteger translationBetweenDiffs = diff_translateLocationFromText1ToText2(patch.diffs, (index1 + diff.text.length));
+								[mutableText deleteCharactersInRange:NSMakeRange(start_loc + index2, translationBetweenDiffs - index2)];
 							}
 						}
 						
@@ -2032,23 +2039,16 @@ NSArray *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSString
 			}
 		}
 		
-		x++;
-	}
-	
-	NSMutableArray *resultsArray = [NSMutableArray arrayWithCapacity:patches.count];
-	
-	for(NSUInteger i = 0; i < patches.count; i++) {
-		[resultsArray addObject:@(results[i])];
-	}
-	
-	if(results != NULL) {
-		free(results);
+		patchIndex++;
 	}
 	
 	// Strip the padding off.
-	text = [textMutable substringWithRange:NSMakeRange(nullPadding.length,
-													   textMutable.length - 2 * nullPadding.length)];
-	return @[text, resultsArray];
+	text = [mutableText substringWithRange:NSMakeRange(nullPadding.length, mutableText.length - 2 * nullPadding.length)];
+	
+	if(indexesOfAppliedPatches != NULL)
+		*indexesOfAppliedPatches = appliedPatches;
+	
+	return text;
 }
 
 
@@ -2082,8 +2082,7 @@ NSString *patch_addPaddingToPatches(NSMutableArray **patches, PatchProperties pr
 	
 	if(diffs.count == 0 || ((DMDiff *)diffs[0]).operation != DIFF_EQUAL) {
 		// Add nullPadding equality.
-		[diffs insertObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:nullPadding]
-					atIndex:0];
+		[diffs insertObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:nullPadding] atIndex:0];
 		patch.start1 -= paddingLength;                                                                                                                                                                                                                                                                                                                                 // Should be 0.
 		patch.start2 -= paddingLength;                                                                                                                                                                                                                                                                                                                                 // Should be 0.
 		patch.length1 += paddingLength;
@@ -2256,7 +2255,7 @@ NSString *patch_patchesToText(NSArray *patches)
 	NSMutableString *text = [NSMutableString string];
 	
 	for(DMPatch *patch in patches) {
-		[text appendString:[patch description]];
+		[text appendString:[patch patchText]];
 	}
 	
 	return text;

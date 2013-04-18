@@ -35,13 +35,19 @@
 }
 
 
+- (NSString *)description
+{
+	return [[super description] stringByAppendingFormat:@" %@", [self patchText]];
+}
+
+
 /**
  * Emulate GNU diff's format.
  * Header: @@ -382,8 +481,9 @@
  * Indicies are printed as 1-based, not 0-based.
  * @return The GNU diff NSString.
  */
-- (NSString *)description
+- (NSString *)patchText
 {
 	NSString *coords1;
 	NSString *coords2;
