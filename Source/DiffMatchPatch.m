@@ -1627,11 +1627,11 @@ NSUInteger match_bitapOfTextAndPattern(NSString *text, NSString *pattern, NSUInt
 		for(NSUInteger j = finish; j >= start; j--) {
 			NSUInteger charMatch;
 			
-			if(text.length <= j - 1 || ![alphabet objectForKey:@([text characterAtIndex:(j - 1)])]) {
+			if(text.length <= j - 1 || ![alphabet objectForKey:[text substringWithRange:NSMakeRange((j - 1), 1)]]) {
 				// Out of range.
 				charMatch = 0;
 			} else {
-				charMatch = [(NSNumber *)[alphabet objectForKey:@([text characterAtIndex:(j - 1)])] unsignedIntegerValue];
+				charMatch = [(NSNumber *)[alphabet objectForKey:[text substringWithRange:NSMakeRange((j - 1), 1)]] unsignedIntegerValue];
 			}
 			
 			if(d == 0) {
