@@ -46,6 +46,10 @@
 		4A5D0C561719DC1F00DBA40A /* DMDiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D01718BBC30050A4F2 /* DMDiff.m */; };
 		4A5D0C571719DC1F00DBA40A /* DMPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D21718BBC30050A4F2 /* DMPatch.m */; };
 		4A5D0C581719DC1F00DBA40A /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D41718BBC30050A4F2 /* NSString+UriCompatibility.m */; };
+		4A92746A1720BFD600D7A46B /* Speedtest1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9274681720BFD600D7A46B /* Speedtest1.txt */; };
+		4A92746B1720BFD600D7A46B /* Speedtest2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9274691720BFD600D7A46B /* Speedtest2.txt */; };
+		4A92746C1720BFE700D7A46B /* Speedtest1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9274681720BFD600D7A46B /* Speedtest1.txt */; };
+		4A92746D1720BFE700D7A46B /* Speedtest2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9274691720BFD600D7A46B /* Speedtest2.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +115,8 @@
 		4A4B56D21718BBC30050A4F2 /* DMPatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMPatch.m; path = Source/DMPatch.m; sourceTree = "<group>"; };
 		4A4B56D31718BBC30050A4F2 /* NSString+UriCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+UriCompatibility.h"; path = "Source/NSString+UriCompatibility.h"; sourceTree = "<group>"; };
 		4A4B56D41718BBC30050A4F2 /* NSString+UriCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+UriCompatibility.m"; path = "Source/NSString+UriCompatibility.m"; sourceTree = "<group>"; };
+		4A9274681720BFD600D7A46B /* Speedtest1.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Speedtest1.txt; path = Tests/Speedtest1.txt; sourceTree = "<group>"; };
+		4A9274691720BFD600D7A46B /* Speedtest2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Speedtest2.txt; path = Tests/Speedtest2.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +249,8 @@
 			children = (
 				4A4B56271718B5E70050A4F2 /* DiffMatchPatchTests.h */,
 				4A4B56281718B5E70050A4F2 /* DiffMatchPatchTests.m */,
+				4A9274681720BFD600D7A46B /* Speedtest1.txt */,
+				4A9274691720BFD600D7A46B /* Speedtest2.txt */,
 				4A4B55E61718B17F0050A4F2 /* DiffMatchPatch Mac */,
 				4A4B56021718B17F0050A4F2 /* DiffMatchPatch Mac Tests */,
 				4A4B567A1718B7860050A4F2 /* DiffMatchPatch iOS */,
@@ -430,6 +438,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A4B56261718B59A0050A4F2 /* InfoPlist.strings in Resources */,
+				4A92746A1720BFD600D7A46B /* Speedtest1.txt in Resources */,
+				4A92746B1720BFD600D7A46B /* Speedtest2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +459,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A4B56C21718B9D10050A4F2 /* InfoPlist.strings in Resources */,
+				4A92746C1720BFE700D7A46B /* Speedtest1.txt in Resources */,
+				4A92746D1720BFE700D7A46B /* Speedtest2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

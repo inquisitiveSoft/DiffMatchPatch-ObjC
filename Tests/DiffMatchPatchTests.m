@@ -1679,6 +1679,19 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 }
 
 
+- (void)test_speedtests
+{
+	NSString *text1 = [NSString stringWithContentsOfFile:@"Speedtest1.txt" encoding:NSUTF8StringEncoding error:NULL];
+	NSString *text2 = [NSString stringWithContentsOfFile:@"Speedtest2.txt" encoding:NSUTF8StringEncoding error:NULL];
+	
+	NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+	diff_diffsBetweenTexts(text1, text2);
+	NSTimeInterval duration = [NSDate timeIntervalSinceReferenceDate] - start;
+	
+	NSLog(@"test_speedtests: Elapsed time: %.4lf", (double)duration);
+}
+
+
 #pragma mark Test Utility Functions
 
 
