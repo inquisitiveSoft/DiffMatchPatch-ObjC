@@ -1,11 +1,25 @@
-//
-//  DiffMatchPatchTests.m
-//  DiffMatchPatchTests
-//
-//  Created by Harry Jordan on 12/04/2013.
-//  Copyright (c) 2013 Harry Jordan. All rights reserved.
-//	Apache 2 license
-//
+/*
+ * Diff Match and Patch
+ *
+ * Copyright 2010 geheimwerk.de.
+ * http://code.google.com/p/google-diff-match-patch/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Author: fraser@google.com (Neil Fraser)
+ * ObjC port: jan@geheimwerk.de (Jan Weiß)
+ * Refactoring & mangling: @inquisitivesoft (Harry Jordan)
+ */
 
 
 #import "DiffMatchPatchTests.h"
@@ -1605,7 +1619,7 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 	NSIndexSet *indexesOfAppliedPatches = nil;
 	NSArray *patches = patch_patchesFromTextsWithProperties(@"", @"", properties);
 	NSString *resultString = patch_applyPatchesToTextWithProperties(patches, @"Hello world.", &indexesOfAppliedPatches, properties);
-	resultString = [resultString stringByAppendingFormat:@"\t%ld", [indexesOfAppliedPatches count]];
+	resultString = [resultString stringByAppendingFormat:@"\t%ld", (unsigned long)[indexesOfAppliedPatches count]];
 	STAssertEqualObjects(@"Hello world.\t0", resultString, @"patch_apply: Null case.");
 	
 	
