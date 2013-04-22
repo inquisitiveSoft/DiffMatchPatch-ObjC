@@ -210,7 +210,7 @@ NSMutableArray *diff_computeDiffsBetweenTexts(NSString *text1, NSString *text2, 
 	
 	if(i != NSNotFound) {
 		// Shorter text is inside the longer text (speedup).
-		DiffOperation op = (text1.length > text2.length) ? DIFF_DELETE : DIFF_INSERT;
+		DMDiffOperation op = (text1.length > text2.length) ? DIFF_DELETE : DIFF_INSERT;
 		[diffs addObject:[DMDiff diffWithOperation:op andText:[longtext substringToIndex:i]]];
 		[diffs addObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:shorttext]];
 		[diffs addObject:[DMDiff diffWithOperation:op andText:[longtext substringFromIndex:(i + shorttext.length)]]];
@@ -2158,7 +2158,7 @@ void patch_splitMax(NSMutableArray **patches, PatchProperties properties)
 			}
 			
 			while(bigpatch.diffs.count != 0 && patch.length1 < patch_size - properties.patchMargin) {
-				DiffOperation diff_type = ((DMDiff *)(bigpatch.diffs)[0]).operation;
+				DMDiffOperation diff_type = ((DMDiff *)(bigpatch.diffs)[0]).operation;
 				NSString *diff_text = ((DMDiff *)(bigpatch.diffs)[0]).text;
 				
 				if(diff_type == DIFF_INSERT) {

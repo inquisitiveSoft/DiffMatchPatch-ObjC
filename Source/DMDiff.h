@@ -35,7 +35,7 @@ typedef enum {
 	DIFF_DELETE = 1,
 	DIFF_INSERT = 2,
 	DIFF_EQUAL = 3
-} DiffOperation;
+} DMDiffOperation;
 
 
 #import <Foundation/Foundation.h>
@@ -43,10 +43,10 @@ typedef enum {
 @interface DMDiff :NSObject <NSCopying> {
 }
 
-@property (nonatomic, assign) DiffOperation operation;
+@property (nonatomic, assign) DMDiffOperation operation;
 @property (nonatomic, copy) NSString *text;
 
-+ (id)diffWithOperation:(DiffOperation)anOperation andText:(NSString *)aText;
-- (id)initWithOperation:(DiffOperation)anOperation andText:(NSString *)aText;
++ (id)diffWithOperation:(DMDiffOperation)anOperation andText:(NSString *)aText;
+- (id)initWithOperation:(DMDiffOperation)anOperation andText:(NSString *)aText;
 
 @end

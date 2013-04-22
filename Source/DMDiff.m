@@ -32,13 +32,13 @@
  * @param operation One of DIFF_INSERT, DIFF_DELETE or DIFF_EQUAL.
  * @param text The text being applied.
  */
-+ (id)diffWithOperation:(DiffOperation)anOperation andText:(NSString *)aText
++ (id)diffWithOperation:(DMDiffOperation)anOperation andText:(NSString *)aText
 {
 	return [[self alloc] initWithOperation:anOperation andText:aText];
 }
 
 
-- (id)initWithOperation:(DiffOperation)anOperation andText:(NSString *)aText
+- (id)initWithOperation:(DMDiffOperation)anOperation andText:(NSString *)aText
 {
 	self = [super init];
 	
