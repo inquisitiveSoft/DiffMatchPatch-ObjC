@@ -1026,23 +1026,25 @@ NSString *diff_prettyHTMLFromDiffs(NSArray *diffs)
 	NSMutableString *html = [NSMutableString string];
 	
 	for(DMDiff *diff in diffs) {
-		NSMutableString *text = [diff.text mutableCopy];
-		[text replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-		[text replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-		[text replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-		[text replaceOccurrencesOfString:@"\n" withString:@"&para;<br>" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
+		NSMutableString *diffText = [diff.text mutableCopy];
+		NSUInteger textLength = diffText.length;
+		
+		[diffText replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange(0, textLength)];
+		[diffText replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange(0, textLength)];
+		[diffText replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange(0, textLength)];
+		[diffText replaceOccurrencesOfString:@"\n" withString:@"<br>" options:NSLiteralSearch range:NSMakeRange(0, textLength)];
 		
 		switch(diff.operation) {
 			case DIFF_INSERT:
-				[html appendFormat:@"<ins style=\"background:#e6ffe6;\">%@</ins>", text];
+				[html appendFormat:@"<ins>%@</ins>", diffText];
 				break;
 				
 			case DIFF_DELETE:
-				[html appendFormat:@"<del style=\"background:#ffe6e6;\">%@</del>", text];
+				[html appendFormat:@"<del>%@</del>", diffText];
 				break;
 				
 			case DIFF_EQUAL:
-				[html appendFormat:@"<span>%@</span>", text];
+				[html appendFormat:@"<span>%@</span>", diffText];
 				break;
 		}
 	}
