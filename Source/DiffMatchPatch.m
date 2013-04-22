@@ -32,7 +32,7 @@
 // Text parsing and conversion
 #import "DiffMatchPatchCFUtilities.h"
 #import "NSString+UriCompatibility.h"
-
+#import "NSString+EscapeHTMLCharacters.h"
 
 
 #pragma mark -
@@ -1026,13 +1026,7 @@ NSString *diff_prettyHTMLFromDiffs(NSArray *diffs)
 	NSMutableString *html = [NSMutableString string];
 	
 	for(DMDiff *diff in diffs) {
-		NSMutableString *diffText = [diff.text mutableCopy];
-		NSUInteger textLength = diffText.length;
-		
-		[diffText replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange(0, textLength)];
-		[diffText replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange(0, textLength)];
-		[diffText replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange(0, textLength)];
-		[diffText replaceOccurrencesOfString:@"\n" withString:@"<br>" options:NSLiteralSearch range:NSMakeRange(0, textLength)];
+		NSMutableString *diffText = [[diff.text stringByEscapingHTML] mutableCopy];
 		
 		switch(diff.operation) {
 			case DIFF_INSERT:
