@@ -686,90 +686,84 @@ void diff_charsToTokens(NSArray **diffs, NSArray *tokenArray)
 
 void diff_cleanupMerge(NSMutableArray **inputDiffs)
 {
-	if(inputDiffs == NULL) {
+	if(inputDiffs == NULL || [*inputDiffs count] == 0) {
 		return;
 	}
 	
 	NSMutableArray *diffs = *inputDiffs;
+	[diffs addObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:@""]];	// Add a dummy entry at the end.
 	
-	if (diffs.count == 0) {
-		return;
-	}
-	
-#define prevDiff ((DMDiff *)[diffs objectAtIndex:(thisPointer - 1)])
-#define thisDiff ((DMDiff *)[diffs objectAtIndex:thisPointer])
-#define nextDiff ((DMDiff *)[diffs objectAtIndex:(thisPointer + 1)])
-	
-	
-	// Add a dummy entry at the end.
-	[diffs addObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:@""]];
-	NSUInteger thisPointer = 0;
+	NSUInteger diffIndex = 0;
 	NSUInteger count_delete = 0;
 	NSUInteger count_insert = 0;
 	NSString *text_delete = @"";
 	NSString *text_insert = @"";
 	NSUInteger commonlength;
 	
-	while (thisPointer < diffs.count) {
-		switch (thisDiff.operation) {
+	while(diffIndex < diffs.count) {
+		DMDiff *thisDiff = diffs[diffIndex];
+		
+		switch(thisDiff.operation) {
 			case DIFF_INSERT:
 				count_insert++;
 				text_insert = [text_insert stringByAppendingString:thisDiff.text];
-				thisPointer++;
+				diffIndex++;
 				break;
 			case DIFF_DELETE:
 				count_delete++;
 				text_delete = [text_delete stringByAppendingString:thisDiff.text];
-				thisPointer++;
+				diffIndex++;
 				break;
-			case DIFF_EQUAL:
-				// Upon reaching an equality, check for prior redundancies.
-				if (count_delete + count_insert > 1) {
-					if (count_delete != 0 && count_insert != 0) {
-						// Factor out any common prefixes.
-						commonlength = (NSUInteger)diff_commonPrefix((__bridge CFStringRef)text_insert, (__bridge CFStringRef)text_delete);
-						if (commonlength != 0) {
-							if ((thisPointer - count_delete - count_insert) > 0 && ((DMDiff *)[diffs objectAtIndex:(thisPointer - count_delete - count_insert - 1)]).operation == DIFF_EQUAL) {
-								((DMDiff *)[diffs objectAtIndex:(thisPointer - count_delete - count_insert - 1)]).text = [((DMDiff *)[diffs objectAtIndex:(thisPointer - count_delete - count_insert - 1)]).text stringByAppendingString:[text_insert substringToIndex:commonlength]];
-							} else {
-								[diffs insertObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:[text_insert substringToIndex:commonlength]] atIndex:0];
-								thisPointer++;
-							}
-							text_insert = [text_insert substringFromIndex:commonlength];
-							text_delete = [text_delete substringFromIndex:commonlength];
+		case DIFF_EQUAL:
+			// Upon reaching an equality, check for prior redundancies.
+			if(count_delete + count_insert > 1) {
+				if (count_delete != 0 && count_insert != 0) {
+					// Factor out any common prefixes.
+					commonlength = (NSUInteger)diff_commonPrefix((__bridge CFStringRef)text_insert, (__bridge CFStringRef)text_delete);
+					if (commonlength != 0) {
+						if ((diffIndex - count_delete - count_insert) > 0 && ((DMDiff *)[diffs objectAtIndex:(diffIndex - count_delete - count_insert - 1)]).operation == DIFF_EQUAL) {
+							((DMDiff *)[diffs objectAtIndex:(diffIndex - count_delete - count_insert - 1)]).text = [((DMDiff *)[diffs objectAtIndex:(diffIndex - count_delete - count_insert - 1)]).text stringByAppendingString:[text_insert substringToIndex:commonlength]];
+						} else {
+							[diffs insertObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:[text_insert substringToIndex:commonlength]] atIndex:0];
+							diffIndex++;
 						}
-						// Factor out any common suffixes.
-						commonlength = (NSUInteger)diff_commonSuffix((__bridge CFStringRef)text_insert, (__bridge CFStringRef)text_delete);
-						
-						if(commonlength != 0) {
-							thisDiff.text = [[text_insert substringFromIndex:(text_insert.length - commonlength)] stringByAppendingString:thisDiff.text];
-							text_insert = [text_insert substringWithRange:NSMakeRange(0, text_insert.length - commonlength)];
-							text_delete = [text_delete substringWithRange:NSMakeRange(0, text_delete.length - commonlength)];
-						}
+						text_insert = [text_insert substringFromIndex:commonlength];
+						text_delete = [text_delete substringFromIndex:commonlength];
 					}
-					// Delete the offending records and add the merged ones.
-					if (count_delete == 0) {
-						diff_spliceTwoArrays(&diffs, thisPointer - count_insert, count_delete + count_insert, [NSMutableArray arrayWithObject:[DMDiff diffWithOperation:DIFF_INSERT andText:text_insert]]);
-					} else if (count_insert == 0) {
-						diff_spliceTwoArrays(&diffs, thisPointer - count_delete, count_delete + count_insert, [NSMutableArray arrayWithObject:[DMDiff diffWithOperation:DIFF_DELETE andText:text_delete]]);
-					} else {
-						diff_spliceTwoArrays(&diffs, thisPointer - count_delete - count_insert, count_delete + count_insert, [NSMutableArray arrayWithObjects:[DMDiff diffWithOperation:DIFF_DELETE andText:text_delete], [DMDiff diffWithOperation:DIFF_INSERT andText:text_insert], nil]);
-					}
+					// Factor out any common suffixes.
+					commonlength = (NSUInteger)diff_commonSuffix((__bridge CFStringRef)text_insert, (__bridge CFStringRef)text_delete);
 					
-					thisPointer = thisPointer - count_delete - count_insert +
-					(count_delete != 0 ? 1 : 0) + (count_insert != 0 ? 1 : 0) + 1;
-				} else if (thisPointer != 0 && prevDiff.operation == DIFF_EQUAL) {
-					// Merge this equality with the previous one.
-					prevDiff.text = [prevDiff.text stringByAppendingString:thisDiff.text];
-					[diffs removeObjectAtIndex:thisPointer];
-				} else {
-					thisPointer++;
+					if(commonlength != 0) {
+						thisDiff.text = [[text_insert substringFromIndex:(text_insert.length - commonlength)] stringByAppendingString:thisDiff.text];
+						text_insert = [text_insert substringWithRange:NSMakeRange(0, text_insert.length - commonlength)];
+						text_delete = [text_delete substringWithRange:NSMakeRange(0, text_delete.length - commonlength)];
+					}
 				}
-				count_insert = 0;
-				count_delete = 0;
-				text_delete = @"";
-				text_insert = @"";
-				break;
+				// Delete the offending records and add the merged ones.
+				if (count_delete == 0) {
+					diff_spliceTwoArrays(&diffs, diffIndex - count_insert, count_delete + count_insert, [NSMutableArray arrayWithObject:[DMDiff diffWithOperation:DIFF_INSERT andText:text_insert]]);
+				} else if (count_insert == 0) {
+					diff_spliceTwoArrays(&diffs, diffIndex - count_delete, count_delete + count_insert, [NSMutableArray arrayWithObject:[DMDiff diffWithOperation:DIFF_DELETE andText:text_delete]]);
+				} else {
+					diff_spliceTwoArrays(&diffs, diffIndex - count_delete - count_insert, count_delete + count_insert, [NSMutableArray arrayWithObjects:[DMDiff diffWithOperation:DIFF_DELETE andText:text_delete], [DMDiff diffWithOperation:DIFF_INSERT andText:text_insert], nil]);
+				}
+				
+				diffIndex = diffIndex - count_delete - count_insert +
+				(count_delete != 0 ? 1 : 0) + (count_insert != 0 ? 1 : 0) + 1;
+			} else if (diffIndex != 0 && [diffs[diffIndex - 1] operation] == DIFF_EQUAL) {
+				// Merge this equality with the previous one.
+				DMDiff *prevDiff = diffs[diffIndex - 1];
+				prevDiff.text = [prevDiff.text stringByAppendingString:thisDiff.text];
+				[diffs removeObjectAtIndex:diffIndex];
+			} else {
+				diffIndex++;
+			}
+			
+			count_insert = 0;
+			count_delete = 0;
+			text_delete = @"";
+			text_insert = @"";
+			break;
 		}
 	}
 	
@@ -781,39 +775,39 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 	// equalities which can be shifted sideways to eliminate an equality.
 	// e.g: A<ins>BA</ins>C -> <ins>AB</ins>AC
 	BOOL changes = NO;
-	thisPointer = 1;
+	diffIndex = 1;
 	
 	// Intentionally ignore the first and last element (don't need checking).
-	while (thisPointer < (diffs.count - 1)) {
-		if (prevDiff.operation == DIFF_EQUAL &&
-			nextDiff.operation == DIFF_EQUAL) {
+	while(diffIndex < (diffs.count - 1)) {
+		DMDiff *prevDiff = diffs[diffIndex - 1];
+		DMDiff *thisDiff = diffs[diffIndex];
+		DMDiff *nextDiff = diffs[diffIndex + 1];
+		
+		if(prevDiff.operation == DIFF_EQUAL && nextDiff.operation == DIFF_EQUAL) {
 			// This is a single edit surrounded by equalities.
-			if ([thisDiff.text hasSuffix:prevDiff.text]) {
+			if([thisDiff.text hasSuffix:prevDiff.text]) {
 				// Shift the edit over the previous equality.
 				thisDiff.text = [prevDiff.text stringByAppendingString:
 								 [thisDiff.text substringToIndex:(thisDiff.text.length - prevDiff.text.length)]];
 				nextDiff.text = [prevDiff.text stringByAppendingString:nextDiff.text];
-				diff_spliceTwoArrays(inputDiffs, thisPointer - 1, 1, nil);
+				diff_spliceTwoArrays(inputDiffs, diffIndex - 1, 1, nil);
 				changes = YES;
 			} else if ([thisDiff.text hasPrefix:nextDiff.text]) {
 				// Shift the edit over the next equality.
 				prevDiff.text = [prevDiff.text stringByAppendingString:nextDiff.text];
 				thisDiff.text = [[thisDiff.text substringFromIndex:nextDiff.text.length] stringByAppendingString:nextDiff.text];
-				diff_spliceTwoArrays(inputDiffs, thisPointer + 1, 1, nil);
+				diff_spliceTwoArrays(inputDiffs, diffIndex + 1, 1, nil);
 				changes = YES;
 			}
 		}
-		thisPointer++;
+		
+		diffIndex++;
 	}
 	
 	// If shifts were made, the diff needs reordering and another shift sweep.
 	if(changes) {
 		diff_cleanupMerge(inputDiffs);
 	}
-	
-#undef prevDiff
-#undef thisDiff
-#undef nextDiff
 }
 
 
