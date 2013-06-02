@@ -813,20 +813,22 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
  * @param diffs NSMutableArray of Diff objects.
  */
 
-void diff_cleanupSemanticLossless(NSMutableArray **diffs)
+void diff_cleanupSemanticLossless(NSMutableArray **mutableDiffs)
 {
-	if(diffs == NULL || [*diffs count] == 0) {
+	if(mutableDiffs == NULL || [*mutableDiffs count] == 0) {
 		return;
 	}
 	
-#define prevDiff ((DMDiff *)[*diffs objectAtIndex:(indexOfCurrentDiff - 1)])
-#define thisDiff ((DMDiff *)[*diffs objectAtIndex:indexOfCurrentDiff])
-#define nextDiff ((DMDiff *)[*diffs objectAtIndex:(indexOfCurrentDiff + 1)])
 	
+	NSMutableArray *diffs = *mutableDiffs;
 	NSUInteger indexOfCurrentDiff = 1;
 	
 	// Intentionally ignore the first and last element (don't need checking).
-	while(indexOfCurrentDiff < ([*diffs count] - 1)) {
+	while(indexOfCurrentDiff < (diffs.count - 1)) {
+		DMDiff *prevDiff = diffs[indexOfCurrentDiff - 1];
+		DMDiff *thisDiff = diffs[indexOfCurrentDiff];
+		DMDiff *nextDiff = diffs[indexOfCurrentDiff + 1];
+		
 		if(prevDiff.operation == DIFF_EQUAL && nextDiff.operation == DIFF_EQUAL) {
 			// This is a single edit surrounded by equalities.
 			NSString *equality1 = prevDiff.text;
@@ -871,7 +873,7 @@ void diff_cleanupSemanticLossless(NSMutableArray **diffs)
 				if(bestEquality1.length != 0) {
 					prevDiff.text = bestEquality1;
 				} else {
-					[*diffs removeObjectAtIndex:indexOfCurrentDiff - 1];
+					[diffs removeObjectAtIndex:indexOfCurrentDiff - 1];
 					indexOfCurrentDiff--;
 				}
 				
@@ -880,7 +882,7 @@ void diff_cleanupSemanticLossless(NSMutableArray **diffs)
 				if(bestEquality2.length != 0) {
 					nextDiff.text = bestEquality2;
 				} else {
-					[*diffs removeObjectAtIndex:indexOfCurrentDiff + 1];
+					[diffs removeObjectAtIndex:indexOfCurrentDiff + 1];
 					indexOfCurrentDiff--;
 				}
 			}
@@ -888,10 +890,6 @@ void diff_cleanupSemanticLossless(NSMutableArray **diffs)
 		
 		indexOfCurrentDiff++;
 	}
-	
-#undef prevDiff
-#undef thisDiff
-#undef nextDiff
 }
 
 
