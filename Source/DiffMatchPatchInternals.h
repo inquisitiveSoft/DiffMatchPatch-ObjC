@@ -77,7 +77,7 @@ MatchProperties match_defaultMatchProperties();
 PatchProperties patch_defaultPatchProperties();
 
 
-// Internal functions for patching
+// Internal functions for diffing
 NSMutableArray *diff_diffsBetweenTextsWithProperties(NSString *oldText, NSString *newText, DiffProperties properties);
 NSUInteger diff_translateLocationFromText1ToText2(NSArray *diffs, NSUInteger location);
 NSMutableArray *diff_computeDiffsBetweenTexts(NSString *text1, NSString *text2, DiffProperties properties);
@@ -113,6 +113,7 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
 NSString *patch_addPaddingToPatches(NSMutableArray **patches, PatchProperties properties);
 void patch_splitMax(NSMutableArray **patches, PatchProperties properties);
 void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties properties);
+
 
 // A convenience function to splice two arrays, likely of DMDiffs or DMPatches
 void diff_spliceTwoArrays(NSMutableArray **input, NSUInteger start, NSUInteger count, NSArray *objects);

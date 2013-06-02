@@ -142,7 +142,7 @@ int compareCharacterDefinitions(void const *firstEquivalent, void const *secondE
 					}
 				}
 			} else if(substringRange.length > 1) {
-				// Otherwise just add the complex character sequence
+				// Otherwise just append the complex character sequence
 				[result appendString:substring];
 			}
 			

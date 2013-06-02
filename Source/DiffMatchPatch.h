@@ -196,6 +196,7 @@ NSArray *patch_parsePatchesFromText(NSString *text, NSError **error);
  * @param patches					An NSArray of DMPatch objects
  * @param text						The old text
  * @param indexesOfAppliedPatches	An NSIndexSet of the patches, passed by reference (optional)
+ *									Pass NULL if not required
  * @return The patched text
  */
 
