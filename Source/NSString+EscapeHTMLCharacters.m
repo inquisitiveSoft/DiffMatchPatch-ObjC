@@ -16,7 +16,7 @@
  *
  * Authored by @inquisitiveSoft (Harry Jordan)
  * 
- * Heavily inspired by http://google-toolbox-for-mac.googlecode.com/svn/trunk/Foundation/GTMNSString+HTML.m
+ * Inspired by http://google-toolbox-for-mac.googlecode.com/svn/trunk/Foundation/GTMNSString+HTML.m
  * in fact the mapOfHTMLEquivalentsForCharacters table is a directly copy
  */
 
@@ -31,21 +31,21 @@ typedef struct {
 
 
 static DMCharacterDefinition mapOfHTMLEquivalentsForCharacters[] = {
-	{ "&#9;",		9 },	// Tab character
+	{ "&#9;",		   9 },		// Tab character
 	
 	// Originally from http://www.w3.org/TR/xhtml1/dtds.html#a_dtd_Special_characters
-	{ "&quot;",		34 },
-	{ "&amp;",		38 },
-	{ "&apos;",		39 },
-	{ "&lt;",		60 },
-	{ "&gt;",		62 },
-	{ "&OElig;",	338 },
-	{ "&oelig;",	339 },
-	{ "&Scaron;",	352 },
-	{ "&scaron;",	353 },
-	{ "&Yuml;",		376 },
-	{ "&circ;",		710 },
-	{ "&tilde;",	732 },
+	{ "&quot;",		  34 },
+	{ "&amp;",		  38 },
+	{ "&apos;",		  39 },
+	{ "&lt;",		  60 },
+	{ "&gt;",		  62 },
+	{ "&OElig;",	 338 },
+	{ "&oelig;",	 339 },
+	{ "&Scaron;",	 352 },
+	{ "&scaron;",	 353 },
+	{ "&Yuml;",		 376 },
+	{ "&circ;",		 710 },
+	{ "&tilde;",	 732 },
 	{ "&ensp;",		8194 },
 	{ "&emsp;",		8195 },
 	{ "&thinsp;",	8201 },
@@ -117,27 +117,33 @@ int compareCharacterDefinitions(void const *firstEquivalent, void const *secondE
 				[result appendString:@" "];
 			
 			previousCharacterIsWhiteSpace = TRUE;
-		} else if(substringRange.length >= 1) {
-			unichar currentCharacter = [substring characterAtIndex:0];
-			
-			if([[NSCharacterSet newlineCharacterSet] characterIsMember:currentCharacter]) {
-				// If the character represents a new line then add a <br> tag
-				// Doesn't do any clever parsing of paragraphs
-				[result appendString:@"<br>\n"];
-			} else {
-				// If character is not a whitespace or newline character then search
-				// mapOfHTMLEquivalentsForCharacters to see if we can find a replacement for it
-				DMCharacterDefinition currentCharacterDefinition;
-				currentCharacterDefinition.character = currentCharacter;
-				DMCharacterDefinition *searchResult = bsearch(&currentCharacterDefinition, &mapOfHTMLEquivalentsForCharacters, numberOfHTMLEquivalents, sizeof(DMCharacterDefinition), compareCharacterDefinitions);
+		} else {
+			if(substringRange.length == 1) {
+				// If the substring can be represented as a single unicode code point
+				unichar currentCharacter = [substring characterAtIndex:0];
 				
-				if(searchResult != NULL) {
-					// Append the resulting encoded HTML character
-					[result appendFormat:@"%s", searchResult->name];
+				if([[NSCharacterSet newlineCharacterSet] characterIsMember:currentCharacter]) {
+					// If the character represents a new line then add a <br> tag
+					// Doesn't do any clever parsing of paragraphs
+					[result appendString:@"<br>\n"];
 				} else {
-					// Otherwise append the character as is
-					[result appendFormat:@"%@", substring];
+					// If character is not a whitespace or newline character then search
+					// mapOfHTMLEquivalentsForCharacters to see if we can find a replacement for it
+					DMCharacterDefinition currentCharacterDefinition;
+					currentCharacterDefinition.character = currentCharacter;
+					DMCharacterDefinition *searchResult = bsearch(&currentCharacterDefinition, &mapOfHTMLEquivalentsForCharacters, numberOfHTMLEquivalents, sizeof(DMCharacterDefinition), compareCharacterDefinitions);
+					
+					if(searchResult != NULL) {
+						// Append the resulting encoded HTML character
+						[result appendFormat:@"%s", searchResult->name];
+					} else {
+						// Otherwise just append the character
+						[result appendString:substring];
+					}
 				}
+			} else if(substringRange.length > 1) {
+				// Otherwise just add the complex character sequence
+				[result appendString:substring];
 			}
 			
 			previousCharacterIsWhiteSpace = FALSE;

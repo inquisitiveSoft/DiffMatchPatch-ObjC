@@ -76,7 +76,7 @@ NSString *diff_text2(NSArray *diffs);
 
 
 /**
- * Create a string output from an array of DMDiff objects
+ * Create a HTML output from an array of DMDiff objects
  * 
  * @param diffs		The array of DMDiff objects.
  * @return A HTML string
