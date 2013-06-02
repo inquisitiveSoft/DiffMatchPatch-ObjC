@@ -104,4 +104,3 @@ NSArray *patch_patchesFromTexts(NSString *text1, NSString *text2);
 NSString *patch_patchesToText(NSArray *patches);
 NSMutableArray *patch_parsePatchesFromText(NSString *text, NSError **error);
 NSString *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text, NSIndexSet **indexesOfAppliedPatches);
-

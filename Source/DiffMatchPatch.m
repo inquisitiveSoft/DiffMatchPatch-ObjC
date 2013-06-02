@@ -419,7 +419,7 @@ free(v2);
 			CFIndex k1_offset = v_offset + k1;
 			CFIndex x1;
 			
-			if( k1 == -d || (k1 != d && v1[k1_offset - 1] < v1[k1_offset + 1])) {
+			if(k1 == -d || (k1 != d && v1[k1_offset - 1] < v1[k1_offset + 1])) {
 				x1 = v1[k1_offset + 1];
 			} else {
 				x1 = v1[k1_offset - 1] + 1;
@@ -462,7 +462,7 @@ free(v2);
 			CFIndex k2_offset = v_offset + k2;
 			CFIndex x2;
 			
-			if( k2 == -d || (k2 != d && v2[k2_offset - 1] < v2[k2_offset + 1])) {
+			if(k2 == -d || (k2 != d && v2[k2_offset - 1] < v2[k2_offset + 1])) {
 				x2 = v2[k2_offset + 1];
 			} else {
 				x2 = v2[k2_offset - 1] + 1;
@@ -711,11 +711,12 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 		case DIFF_EQUAL:
 			// Upon reaching an equality, check for prior redundancies.
 			if(count_delete + count_insert > 1) {
-				if (count_delete != 0 && count_insert != 0) {
+				if(count_delete != 0 && count_insert != 0) {
 					// Factor out any common prefixes.
 					commonlength = (NSUInteger)diff_commonPrefix((__bridge CFStringRef)text_insert, (__bridge CFStringRef)text_delete);
-					if (commonlength != 0) {
-						if ((indexOfCurrentDiff - count_delete - count_insert) > 0 && ((DMDiff *)[diffs objectAtIndex:(indexOfCurrentDiff - count_delete - count_insert - 1)]).operation == DIFF_EQUAL) {
+					
+					if(commonlength != 0) {
+						if((indexOfCurrentDiff - count_delete - count_insert) > 0 && ((DMDiff *)[diffs objectAtIndex:(indexOfCurrentDiff - count_delete - count_insert - 1)]).operation == DIFF_EQUAL) {
 							((DMDiff *)[diffs objectAtIndex:(indexOfCurrentDiff - count_delete - count_insert - 1)]).text = [((DMDiff *)[diffs objectAtIndex:(indexOfCurrentDiff - count_delete - count_insert - 1)]).text stringByAppendingString:[text_insert substringToIndex:commonlength]];
 						} else {
 							[diffs insertObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:[text_insert substringToIndex:commonlength]] atIndex:0];
@@ -734,9 +735,9 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 					}
 				}
 				// Delete the offending records and add the merged ones.
-				if (count_delete == 0) {
+				if(count_delete == 0) {
 					diff_spliceTwoArrays(&diffs, indexOfCurrentDiff - count_insert, count_delete + count_insert, [NSMutableArray arrayWithObject:[DMDiff diffWithOperation:DIFF_INSERT andText:text_insert]]);
-				} else if (count_insert == 0) {
+				} else if(count_insert == 0) {
 					diff_spliceTwoArrays(&diffs, indexOfCurrentDiff - count_delete, count_delete + count_insert, [NSMutableArray arrayWithObject:[DMDiff diffWithOperation:DIFF_DELETE andText:text_delete]]);
 				} else {
 					diff_spliceTwoArrays(&diffs, indexOfCurrentDiff - count_delete - count_insert, count_delete + count_insert, [NSMutableArray arrayWithObjects:[DMDiff diffWithOperation:DIFF_DELETE andText:text_delete], [DMDiff diffWithOperation:DIFF_INSERT andText:text_insert], nil]);
@@ -744,7 +745,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 				
 				indexOfCurrentDiff = indexOfCurrentDiff - count_delete - count_insert +
 				(count_delete != 0 ? 1 : 0) + (count_insert != 0 ? 1 : 0) + 1;
-			} else if (indexOfCurrentDiff != 0 && [diffs[indexOfCurrentDiff - 1] operation] == DIFF_EQUAL) {
+			} else if(indexOfCurrentDiff != 0 && [diffs[indexOfCurrentDiff - 1] operation] == DIFF_EQUAL) {
 				// Merge this equality with the previous one.
 				DMDiff *prevDiff = diffs[indexOfCurrentDiff - 1];
 				prevDiff.text = [prevDiff.text stringByAppendingString:thisDiff.text];
@@ -761,7 +762,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 		}
 	}
 	
-	if (((DMDiff *)diffs.lastObject).text.length == 0) {
+	if(((DMDiff *)diffs.lastObject).text.length == 0) {
 		[diffs removeLastObject];  // Remove the dummy entry at the end.
 	}
 	
@@ -771,7 +772,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 	BOOL changes = NO;
 	indexOfCurrentDiff = 1;
 	
-	// Intentionally ignore the first and last element (don't need checking).
+	// Intentionally ignore the first and last element (as they don't need checking).
 	while(indexOfCurrentDiff < (diffs.count - 1)) {
 		DMDiff *prevDiff = diffs[indexOfCurrentDiff - 1];
 		DMDiff *thisDiff = diffs[indexOfCurrentDiff];
@@ -781,12 +782,11 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 			// This is a single edit surrounded by equalities.
 			if([thisDiff.text hasSuffix:prevDiff.text]) {
 				// Shift the edit over the previous equality.
-				thisDiff.text = [prevDiff.text stringByAppendingString:
-								 [thisDiff.text substringToIndex:(thisDiff.text.length - prevDiff.text.length)]];
+				thisDiff.text = [prevDiff.text stringByAppendingString:[thisDiff.text substringToIndex:(thisDiff.text.length - prevDiff.text.length)]];
 				nextDiff.text = [prevDiff.text stringByAppendingString:nextDiff.text];
 				diff_spliceTwoArrays(inputDiffs, indexOfCurrentDiff - 1, 1, nil);
 				changes = YES;
-			} else if ([thisDiff.text hasPrefix:nextDiff.text]) {
+			} else if([thisDiff.text hasPrefix:nextDiff.text]) {
 				// Shift the edit over the next equality.
 				prevDiff.text = [prevDiff.text stringByAppendingString:nextDiff.text];
 				thisDiff.text = [[thisDiff.text substringFromIndex:nextDiff.text.length] stringByAppendingString:nextDiff.text];
@@ -823,7 +823,7 @@ void diff_cleanupSemanticLossless(NSMutableArray **mutableDiffs)
 	NSMutableArray *diffs = *mutableDiffs;
 	NSUInteger indexOfCurrentDiff = 1;
 	
-	// Intentionally ignore the first and last element (don't need checking).
+	// Intentionally ignore the first and last element (as they don't need checking).
 	while(indexOfCurrentDiff < (diffs.count - 1)) {
 		DMDiff *prevDiff = diffs[indexOfCurrentDiff - 1];
 		DMDiff *thisDiff = diffs[indexOfCurrentDiff];
@@ -902,9 +902,6 @@ void diff_cleanupSemanticLossless(NSMutableArray **mutableDiffs)
 
 void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties properties)
 {
-#define thisDiff			((DMDiff *)[*diffs objectAtIndex:indexOfCurrentDiff])
-#define equalitiesLastValue ( diff_CFArrayLastValueAsCFIndex(equalities))
-	
 	if(diffs == NULL || [*diffs count] == 0) {
 		return;
 	}
@@ -916,22 +913,20 @@ void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties pro
 	// Always equal to equalities.lastObject.text
 	NSString *lastequality = nil;
 	CFIndex indexOfCurrentDiff = 0;	// Index of current position.
-								// Is there an insertion operation before the last equality.
-	BOOL pre_ins = NO;
-	// Is there a deletion operation before the last equality.
-	BOOL pre_del = NO;
-	// Is there an insertion operation after the last equality.
-	BOOL post_ins = NO;
-	// Is there a deletion operation after the last equality.
-	BOOL post_del = NO;
+	BOOL pre_ins = NO;		// Is there an insertion operation before the last equality.
+	BOOL pre_del = NO;		// Is there a deletion operation before the last equality.
+	BOOL post_ins = NO;		// Is there an insertion operation after the last equality.
+	BOOL post_del = NO;		// Is there a deletion operation after the last equality.
 	
 	NSUInteger indexToChange = 0;
 	DMDiff *diffToChange = nil;
 	
-	while(indexOfCurrentDiff < (CFIndex)[*diffs count]) {
+	while(indexOfCurrentDiff < [*diffs count]) {
+		DMDiff *thisDiff = [*diffs objectAtIndex:indexOfCurrentDiff];
+		
 		if(thisDiff.operation == DIFF_EQUAL) {
 			// Equality found.
-			if( thisDiff.text.length < properties.diffEditingCost && (post_ins || post_del)) {
+			if(thisDiff.text.length < properties.diffEditingCost && (post_ins || post_del)) {
 				// Candidate found.
 				CFArrayAppendValue(equalities, (void *)indexOfCurrentDiff);
 				pre_ins = post_ins;
@@ -964,16 +959,19 @@ void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties pro
 				|| ((lastequality.length < properties.diffEditingCost / 2)
 					&& ((pre_ins ? 1 : 0) + (pre_del ? 1 : 0) + (post_ins ? 1 : 0) + (post_del ? 1 : 0)) == 3))) {
 					// Duplicate record.
-					[*diffs insertObject:[DMDiff diffWithOperation:DIFF_DELETE andText:lastequality] atIndex:equalitiesLastValue];
+					CFIndex indexOfLastEquality = diff_CFArrayLastValueAsCFIndex(equalities);
+					[*diffs insertObject:[DMDiff diffWithOperation:DIFF_DELETE andText:lastequality] atIndex:indexOfLastEquality];
+					
 					// Change second copy to insert.
-					indexToChange = equalitiesLastValue + 1;
+					indexToChange = indexOfLastEquality + 1;
 					diffToChange = [*diffs objectAtIndex:indexToChange];
+					
 					// The following assumes, that the diff we are changing is currently not used in a collection where its hash determines its position (e.g. a dictionary)
 					diffToChange.operation = DIFF_INSERT;
-
-					diff_CFArrayRemoveLastValue(equalities);		// Throw away the equality we just deleted.
+					
+					diff_CFArrayRemoveLastValue(equalities);	// Throw away the equality we just deleted.
 					lastequality = nil;
-
+					
 					if(pre_ins && pre_del) {
 					   // No changes made which could affect previous entry, keep going.
 					   post_ins = post_del = YES;
@@ -982,11 +980,11 @@ void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties pro
 					   if(CFArrayGetCount(equalities) > 0) {
 						   diff_CFArrayRemoveLastValue(equalities);
 					   }
-
-					   indexOfCurrentDiff = CFArrayGetCount(equalities) > 0 ? equalitiesLastValue : -1;
+						
+					   indexOfCurrentDiff = CFArrayGetCount(equalities) > 0 ? indexOfLastEquality : -1;
 					   post_ins = post_del = NO;
 					}
-
+					
 				changes = YES;
 			}
 		}
@@ -999,9 +997,6 @@ void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties pro
 	}
 	
 	CFRelease(equalities);
-	
-#undef thisDiff
-#undef equalitiesLastValue
 }
 
 
@@ -1115,7 +1110,7 @@ NSString *diff_deltaFromDiffs(NSArray *diffs)
 	}
 	
 	return delta;
-} /* diff_toDelta */
+}
 
 
 
@@ -1187,7 +1182,7 @@ NSArray *diff_diffsFromOriginalTextAndDelta(NSString *text1, NSString *delta, NS
 					NSString *text;
 					NSRange text1Range = NSMakeRange(0, text1.length);
 					
-					if( NSLocationInRange(indexOfCurrentDiff, text1Range) && NSLocationInRange(indexOfCurrentDiff + (NSUInteger)n - 1, text1Range)) {
+					if(NSLocationInRange(indexOfCurrentDiff, text1Range) && NSLocationInRange(indexOfCurrentDiff + (NSUInteger)n - 1, text1Range)) {
 						text = [text1 substringWithRange:NSMakeRange(indexOfCurrentDiff, (NSUInteger)n)];
 						indexOfCurrentDiff += (NSUInteger)n;
 					} else {
@@ -1208,12 +1203,10 @@ NSArray *diff_diffsFromOriginalTextAndDelta(NSString *text1, NSString *delta, NS
 				}
 				
 			default:
-				{
-					// Anything else is an error.
-					if(error != NULL) {
-						NSString *errorDescription = [NSString stringWithFormat:NSLocalizedString(@"Invalid diff operation in diff_fromDelta: %C", @"Error"), [token characterAtIndex:0]];
-						*error = [NSError errorWithDomain:@"DiffMatchPatchErrorDomain" code:102 userInfo:@{NSLocalizedDescriptionKey: errorDescription}];
-					}
+				// Anything else is an error.
+				if(error != NULL) {
+					NSString *errorDescription = [NSString stringWithFormat:NSLocalizedString(@"Invalid diff operation in diff_fromDelta: %C", @"Error"), [token characterAtIndex:0]];
+					*error = [NSError errorWithDomain:@"DiffMatchPatchErrorDomain" code:102 userInfo:@{NSLocalizedDescriptionKey: errorDescription}];
 				}
 				
 				return nil;
@@ -1328,34 +1321,32 @@ NSUInteger diff_levenshtein(NSArray *diffs)
  */
 
 void diff_cleanupSemantic(NSMutableArray **diffs)
-{	
-#define prevDiff			((DMDiff *)[*diffs objectAtIndex:(indexOfCurrentDiff - 1)])
-#define thisDiff			((DMDiff *)[*diffs objectAtIndex:indexOfCurrentDiff])
-#define nextDiff			((DMDiff *)[*diffs objectAtIndex:(indexOfCurrentDiff + 1)])
-#define equalitiesLastValue ( diff_CFArrayLastValueAsCFIndex(equalities))
-
+{
 	if(diffs == NULL || [*diffs count] == 0) {
 		return;
 	}
 	
-	BOOL changes = NO;
 	// Stack of indices where equalities are found.
 	CFMutableArrayRef equalities = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);
 	
-	// Always equal to [diffs objectAtIndex:equalitiesLastValue].text
-	NSString *lastEquality = nil;
-	NSUInteger indexOfCurrentDiff = 0;			// Index of current position.
-										// Number of characters that changed prior to the equality.
+	NSString *lastEquality = nil;		// Always equal to [diffs objectAtIndex:equalitiesLastValue].text
+	NSUInteger indexOfCurrentDiff = 0;	// Index of current position.
+									
+	// Number of characters that changed prior to the equality.	
 	NSUInteger length_insertions1 = 0;
 	NSUInteger length_deletions1 = 0;
+	
 	// Number of characters that changed after the equality.
 	NSUInteger length_insertions2 = 0;
 	NSUInteger length_deletions2 = 0;
 	
 	NSUInteger indexToChange;
 	DMDiff *diffToChange;
+	BOOL changes = NO;
 	
 	while(indexOfCurrentDiff < [*diffs count]) {
+		DMDiff *thisDiff = [*diffs objectAtIndex:indexOfCurrentDiff];
+		
 		if(thisDiff.operation == DIFF_EQUAL) {                                                                                                                                                                                                                                                                                                // Equality found.
 			CFArrayAppendValue(equalities, (void *)indexOfCurrentDiff);
 			length_insertions1 = length_insertions2;
@@ -1370,16 +1361,18 @@ void diff_cleanupSemantic(NSMutableArray **diffs)
 				length_deletions2 += thisDiff.text.length;
 			}
 			
-			// Eliminate an equality that is smaller or equal to the edits on both
-			// sides of it.
-			if( lastEquality != nil
-			   && ( lastEquality.length <= MAX(length_insertions1, length_deletions1))
-			   && ( lastEquality.length <= MAX(length_insertions2, length_deletions2))) {
+			// Eliminate an equality that is smaller or equal to the edits on both sides of it.
+			if(lastEquality != nil
+			   && (lastEquality.length <= MAX(length_insertions1, length_deletions1))
+			   && (lastEquality.length <= MAX(length_insertions2, length_deletions2))) {
 				// Duplicate record.
-				[*diffs insertObject:[DMDiff diffWithOperation:DIFF_DELETE andText:lastEquality] atIndex:equalitiesLastValue];
+				CFIndex indexOfLastEquality = diff_CFArrayLastValueAsCFIndex(equalities);
+				[*diffs insertObject:[DMDiff diffWithOperation:DIFF_DELETE andText:lastEquality] atIndex:indexOfLastEquality];
+				
 				// Change second copy to insert.
-				indexToChange = equalitiesLastValue + 1;
+				indexToChange = indexOfLastEquality + 1;
 				diffToChange = [*diffs objectAtIndex:indexToChange];
+				
 				// The following assumes, that the diff we are changing is currently not used in a collection where its hash determines its position (e.g. a dictionary)
 				diffToChange.operation = DIFF_INSERT;
 				
@@ -1393,8 +1386,10 @@ void diff_cleanupSemantic(NSMutableArray **diffs)
 				// Setting an unsigned value to -1 may seem weird to some,
 				// but we will pass thru a ++ below:
 				// => overflow => 0
-				indexOfCurrentDiff = CFArrayGetCount(equalities) > 0 ? equalitiesLastValue : -1;
-				length_insertions1 = 0;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 // Reset the counters.
+				indexOfCurrentDiff = CFArrayGetCount(equalities) > 0 ? diff_CFArrayLastValueAsCFIndex(equalities) : -1;
+				
+				// Reset the counters.
+				length_insertions1 = 0;
 				length_deletions1 = 0;
 				length_insertions2 = 0;
 				length_deletions2 = 0;
@@ -1410,6 +1405,7 @@ void diff_cleanupSemantic(NSMutableArray **diffs)
 	if(changes) {
 		diff_cleanupMerge(diffs);
 	}
+	
 	
 	diff_cleanupSemanticLossless(diffs);
 	
@@ -1429,11 +1425,15 @@ void diff_cleanupSemantic(NSMutableArray **diffs)
 	indexOfCurrentDiff = 1;
 	
 	while(indexOfCurrentDiff < [*diffs count]) {
+		DMDiff *prevDiff = [*diffs objectAtIndex:indexOfCurrentDiff - 1];
+		DMDiff *thisDiff = [*diffs objectAtIndex:indexOfCurrentDiff];
+		
 		if(prevDiff.operation == DIFF_DELETE && thisDiff.operation == DIFF_INSERT) {
 			NSString *deletion = prevDiff.text;
 			NSString *insertion = thisDiff.text;
 			NSUInteger overlap_length1 = (NSUInteger)diff_commonOverlap((__bridge CFStringRef)deletion, (__bridge CFStringRef)insertion);
 			NSUInteger overlap_length2 = (NSUInteger)diff_commonOverlap((__bridge CFStringRef)insertion, (__bridge CFStringRef)deletion);
+			DMDiff *nextDiff = [*diffs objectAtIndex:indexOfCurrentDiff + 1];
 			
 			if(overlap_length1 >= overlap_length2) {
 				if(overlap_length1 >= deletion.length / 2.0f ||
@@ -1466,16 +1466,12 @@ void diff_cleanupSemantic(NSMutableArray **diffs)
 	}
 	
 	CFRelease(equalities);
-	
-#undef prevDiff
-#undef thisDiff
-#undef nextDiff
-#undef equalitiesLastValue
-} /* diff_cleanupSemantic */
+}
 
+
+
+#pragma mark -
 #pragma mark Match Functions
-// MATCH FUNCTIONS
-
 
 
 NSUInteger match_locationOfMatchInText(NSString *text, NSString *pattern, NSUInteger approximateLocation)
@@ -1749,6 +1745,7 @@ NSMutableDictionary *match_alphabetFromPattern(NSString *pattern)
 
 
 
+#pragma mark -
 #pragma mark Patch Functions
 
 
@@ -1948,7 +1945,7 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
 		NSString *text1 = diff_text1(currentPatch.diffs);
 		NSUInteger start_loc;
 		NSUInteger endLocation = NSNotFound;
-		if (text1.length > maxBits) {
+		if(text1.length > maxBits) {
 			// patch_splitMax will only provide an oversized pattern
 			// in the case of a monster delete.
 			
@@ -1965,7 +1962,7 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
 			start_loc = match_locationOfMatchInText(mutableText, text1, expected_loc);
 		}
 		
-		if (start_loc == NSNotFound) {
+		if(start_loc == NSNotFound) {
 			// No match found.  :(
 			[appliedPatches removeIndex:patchIndex];
 			// Subtract the delta for this failed patch from subsequent patches.
@@ -2000,13 +1997,13 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
 					
 					NSUInteger index1 = 0;
 					for(DMDiff *currentDiff in currentPatch.diffs) {
-						if (currentDiff.operation != DIFF_EQUAL) {
+						if(currentDiff.operation != DIFF_EQUAL) {
 							NSUInteger index2 = diff_translateLocationFromText1ToText2(diffs, index1);
 							
 							if(currentDiff.operation == DIFF_INSERT) {
 								// Insertion
 								[mutableText insertString:currentDiff.text atIndex:(start_loc + index2)];
-							} else if (currentDiff.operation == DIFF_DELETE) {
+							} else if(currentDiff.operation == DIFF_DELETE) {
 								// Deletion
 								NSUInteger deletionEndPosition = diff_translateLocationFromText1ToText2(diffs, (index1 + currentDiff.text.length));
 								[mutableText deleteCharactersInRange:NSMakeRange(start_loc + index2, (deletionEndPosition - index2))];
