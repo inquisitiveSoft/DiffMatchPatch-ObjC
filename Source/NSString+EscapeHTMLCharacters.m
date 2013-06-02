@@ -95,17 +95,15 @@ int compareCharacterDefinitions(void const *firstEquivalent, void const *secondE
 	if(length <= 0)
 		return self;
 	
-	NSMutableString *result = [[NSMutableString alloc] init];
-	const char *cString = [self cStringUsingEncoding:NSUTF8StringEncoding];
+	__block NSMutableString *result = [[NSMutableString alloc] init];
 	
 	// Iteration state
-	NSInteger characterIndex = 0;
-	BOOL previousCharacterIsWhiteSpace = FALSE;
-	BOOL previousCharacterIsEscapedWhiteSpace = FALSE;
+	__block BOOL previousCharacterIsWhiteSpace = FALSE;
+	__block BOOL previousCharacterIsEscapedWhiteSpace = FALSE;
 	
-	for(characterIndex = 0; characterIndex < length; characterIndex++) {
-		// First, handle spaces as a special case
-		if(cString[characterIndex] == ' ') {
+	[self enumerateSubstringsInRange:NSMakeRange(0, self.length) options:NSStringEnumerationByComposedCharacterSequences usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+		// First, handle spaces as a special case		
+		if([substring isEqualToString:@" "]) {
 			// If there are more than one space characters in a row then add &nbsp;'s
 			if(previousCharacterIsWhiteSpace) {
 				if(!previousCharacterIsEscapedWhiteSpace) {
@@ -119,31 +117,33 @@ int compareCharacterDefinitions(void const *firstEquivalent, void const *secondE
 				[result appendString:@" "];
 			
 			previousCharacterIsWhiteSpace = TRUE;
-		} else {
-			// If the character represents a new line then add a <br> tag
-			// Doesn't do any clever parsing of paragraphs
-			if([[NSCharacterSet newlineCharacterSet] characterIsMember:cString[characterIndex]]) {
+		} else if(substringRange.length >= 1) {
+			unichar currentCharacter = [substring characterAtIndex:0];
+			
+			if([[NSCharacterSet newlineCharacterSet] characterIsMember:currentCharacter]) {
+				// If the character represents a new line then add a <br> tag
+				// Doesn't do any clever parsing of paragraphs
 				[result appendString:@"<br>\n"];
 			} else {
 				// If character is not a whitespace or newline character then search
 				// mapOfHTMLEquivalentsForCharacters to see if we can find a replacement for it
-				DMCharacterDefinition currentCharacter;
-				currentCharacter.character = cString[characterIndex];
-				DMCharacterDefinition *searchResult = bsearch(&currentCharacter, &mapOfHTMLEquivalentsForCharacters, numberOfHTMLEquivalents, sizeof(DMCharacterDefinition), compareCharacterDefinitions);
+				DMCharacterDefinition currentCharacterDefinition;
+				currentCharacterDefinition.character = currentCharacter;
+				DMCharacterDefinition *searchResult = bsearch(&currentCharacterDefinition, &mapOfHTMLEquivalentsForCharacters, numberOfHTMLEquivalents, sizeof(DMCharacterDefinition), compareCharacterDefinitions);
 				
 				if(searchResult != NULL) {
+					// Append the resulting encoded HTML character
 					[result appendFormat:@"%s", searchResult->name];
 				} else {
 					// Otherwise append the character as is
-					[result appendFormat:@"%C", currentCharacter.character];
+					[result appendFormat:@"%@", substring];
 				}
 			}
 			
 			previousCharacterIsWhiteSpace = FALSE;
 			previousCharacterIsEscapedWhiteSpace = FALSE;
 		}
-	}
-	
+	}];
 	
 	return [result copy];	// Return an immutable string
 }

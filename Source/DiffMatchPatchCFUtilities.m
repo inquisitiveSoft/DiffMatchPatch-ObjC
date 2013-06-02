@@ -481,11 +481,8 @@ CFStringRef diff_tokensToCharsMungeCFStringCreate(CFStringRef text, CFMutableArr
 {
 	CFMutableStringRef chars = CFStringCreateMutable(kCFAllocatorDefault, 0);
 	CFIndex textLength = CFStringGetLength(text);
-
-// CFLocaleRef currentLocale = CFLocaleCopyCurrent();
 	CFRange tokenizerRange = CFRangeMake(0, textLength);
 	CFStringTokenizerRef tokenizer = CFStringTokenizerCreate(kCFAllocatorDefault, text, tokenizerRange, tokenizerOptions, NULL);
-// CFRelease(currentLocale);
 
 	// Set tokenizer to the start of the string.
 	CFStringTokenizerTokenType tokenType = CFStringTokenizerGoToTokenAtIndex(tokenizer, 0);
@@ -508,12 +505,11 @@ CFStringRef diff_tokensToCharsMungeCFStringCreate(CFStringRef text, CFMutableArr
 		diff_mungeTokenForRange(text, tokenRange, chars, tokenHash, tokenArray);
 
 		tokenType = CFStringTokenizerAdvanceToNextToken(tokenizer);
-
 		prevTokenRangeMax = (tokenRange.location + tokenRange.length);
 	}
 
 	CFRelease(tokenizer);
-
+	
 	return chars;
 }
 
