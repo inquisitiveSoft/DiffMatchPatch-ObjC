@@ -24,10 +24,12 @@
 
 /*
  * The data structure representing a diff is an array of Diff objects:
- * {Diff(Operation.DIFF_DELETE, "Hello"),
+ * [
+ *  Diff(Operation.DIFF_DELETE, "Hello"),
  *  Diff(Operation.DIFF_INSERT, "Goodbye"),
- *  Diff(Operation.DIFF_EQUAL, " world.")}
- * which means: delete "Hello", add "Goodbye" and keep " world."
+ *  Diff(Operation.DIFF_EQUAL, " world.")
+ * ]
+ *   which means: delete "Hello", add "Goodbye" and keep " world."
  */
 
 

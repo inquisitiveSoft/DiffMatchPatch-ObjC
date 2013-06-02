@@ -21,13 +21,13 @@
  * Refactoring & mangling: @inquisitivesoft (Harry Jordan)
  *
  *
- *
  * This file contains declares the functions that DiffMatchPatch
- * uses internally. You might 
+ * uses internally. You might want to use these for more fine grained
+ * properties, particularly for testing
  */
 
 
-// Structs which are only used internally
+// Structs which are used internally to define properties
 
 struct DiffProperties {
 	BOOL checkLines;			// Set to YES for a faster but less optimal diff
@@ -64,7 +64,6 @@ typedef enum {
 	DiffSentenceTokens = 3,
 	DiffLineBreakDelimiteredTokens = 4
 } DiffTokenMode;
-
 
 
 // Define default properties

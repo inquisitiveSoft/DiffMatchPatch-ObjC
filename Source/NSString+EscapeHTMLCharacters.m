@@ -69,7 +69,7 @@ static DMCharacterDefinition mapOfHTMLEquivalentsForCharacters[] = {
 	{ "&euro;",		8364 },
 };
 
-static const size_t numberOfHTMLEquivalents = 34;		// Need to expand the range of characters
+static const size_t numberOfHTMLEquivalents = 34;		// ToDo: expand the range of characters
 
 
 int compareCharacterDefinitions(void const *firstEquivalent, void const *secondEquivalent) {
