@@ -429,6 +429,7 @@ NSMutableArray *diff_bisectOfStrings(NSString *text1, NSString *text2, DiffPrope
 				x1++;
 				y1++;
 			}
+			
 			v1[k1_offset] = x1;
 			
 			if(x1 > text1_length) {
@@ -523,9 +524,12 @@ NSMutableArray *diff_bisectOfStrings(NSString *text1, NSString *text2, DiffPrope
 	
 	// Diff took too long and hit the deadline or
 	// number of diffs equals number of characters, no commonality at all.
-	diffs = [[NSMutableArray alloc] initWithCapacity:2];
-	[diffs addObject:[DMDiff diffWithOperation:DIFF_DELETE andText:text1]];
-	[diffs addObject:[DMDiff diffWithOperation:DIFF_INSERT andText:text2]];
+	if(!diffs) {
+		diffs = [[NSMutableArray alloc] initWithCapacity:2];
+		[diffs addObject:[DMDiff diffWithOperation:DIFF_DELETE andText:text1]];
+		[diffs addObject:[DMDiff diffWithOperation:DIFF_INSERT andText:text2]];
+	}
+	
 	return diffs;
 }
 
@@ -1446,7 +1450,6 @@ void diff_cleanupSemantic(NSMutableArray **diffs)
 			NSString *insertion = thisDiff.text;
 			NSUInteger overlap_length1 = (NSUInteger)diff_commonOverlap((__bridge CFStringRef)deletion, (__bridge CFStringRef)insertion);
 			NSUInteger overlap_length2 = (NSUInteger)diff_commonOverlap((__bridge CFStringRef)insertion, (__bridge CFStringRef)deletion);
-			DMDiff *nextDiff = [*diffs objectAtIndex:indexOfCurrentDiff + 1];
 			
 			if(overlap_length1 >= overlap_length2) {
 				if(overlap_length1 >= deletion.length / 2.0f ||
@@ -1455,6 +1458,7 @@ void diff_cleanupSemantic(NSMutableArray **diffs)
 					// Insert an equality and trim the surrounding edits.
 					[*diffs insertObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:[insertion substringToIndex:overlap_length1]] atIndex:indexOfCurrentDiff];
 					prevDiff.text = [deletion substringToIndex:(deletion.length - overlap_length1)];
+			DMDiff *nextDiff = [*diffs objectAtIndex:indexOfCurrentDiff + 1];
 					nextDiff.text = [insertion substringFromIndex:overlap_length1];
 					indexOfCurrentDiff++;
 				}
@@ -1466,6 +1470,7 @@ void diff_cleanupSemantic(NSMutableArray **diffs)
 					[*diffs insertObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:[deletion substringToIndex:overlap_length2]] atIndex:indexOfCurrentDiff];
 					prevDiff.operation = DIFF_INSERT;
 					prevDiff.text = [insertion substringToIndex:(insertion.length - overlap_length2)];
+			DMDiff *nextDiff = [*diffs objectAtIndex:indexOfCurrentDiff + 1];
 					nextDiff.operation = DIFF_DELETE;
 					nextDiff.text = [deletion substringFromIndex:overlap_length2];
 					indexOfCurrentDiff++;
