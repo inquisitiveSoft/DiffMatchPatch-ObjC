@@ -46,7 +46,7 @@ NSArray *diff_diffsBetweenTexts(NSString *text1, NSString *text2);
  * @param timeLimit		The number in seconds (from the current time) to allow the function to process the diff.
  *						Enter 0.0 to allow the function an unlimited period.
  *
- * @return Returns an of Diff objects.
+ * @return Returns an array of DMDiff objects.
  */
 
 NSArray *diff_diffsBetweenTextsWithOptions(NSString *text1, NSString *text2, BOOL highQuality, NSTimeInterval timeLimit);
@@ -102,9 +102,6 @@ NSUInteger match_locationOfMatchInTextWithOptions(NSString *text, NSString *patt
 
 NSArray *patch_patchesFromTexts(NSString *text1, NSString *text2);
 NSString *patch_patchesToText(NSArray *patches);
-
+NSMutableArray *patch_parsePatchesFromText(NSString *text, NSError **error);
 NSString *patch_applyPatchesToText(NSArray *sourcePatches, NSString *text, NSIndexSet **indexesOfAppliedPatches);
-
-NSMutableArray *patch_parsePatchesFromText(NSString *textline, NSError **error);
-
 

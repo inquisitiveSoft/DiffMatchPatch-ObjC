@@ -692,13 +692,14 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 	
 	NSMutableArray *diffs = *inputDiffs;
 	
+	if (diffs.count == 0) {
+		return;
+	}
+	
 #define prevDiff ((DMDiff *)[diffs objectAtIndex:(thisPointer - 1)])
 #define thisDiff ((DMDiff *)[diffs objectAtIndex:thisPointer])
 #define nextDiff ((DMDiff *)[diffs objectAtIndex:(thisPointer + 1)])
 	
-	if (diffs.count == 0) {
-		return;
-	}
 	
 	// Add a dummy entry at the end.
 	[diffs addObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:@""]];
@@ -708,6 +709,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 	NSString *text_delete = @"";
 	NSString *text_insert = @"";
 	NSUInteger commonlength;
+	
 	while (thisPointer < diffs.count) {
 		switch (thisDiff.operation) {
 			case DIFF_INSERT:
@@ -770,6 +772,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 				break;
 		}
 	}
+	
 	if (((DMDiff *)diffs.lastObject).text.length == 0) {
 		[diffs removeLastObject];  // Remove the dummy entry at the end.
 	}
@@ -779,6 +782,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 	// e.g: A<ins>BA</ins>C -> <ins>AB</ins>AC
 	BOOL changes = NO;
 	thisPointer = 1;
+	
 	// Intentionally ignore the first and last element (don't need checking).
 	while (thisPointer < (diffs.count - 1)) {
 		if (prevDiff.operation == DIFF_EQUAL &&
@@ -801,6 +805,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 		}
 		thisPointer++;
 	}
+	
 	// If shifts were made, the diff needs reordering and another shift sweep.
 	if(changes) {
 		diff_cleanupMerge(inputDiffs);
@@ -822,13 +827,13 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 
 void diff_cleanupSemanticLossless(NSMutableArray **diffs)
 {
-#define prevDiff ((DMDiff *)[*diffs objectAtIndex:(thisPointer - 1)])
-#define thisDiff ((DMDiff *)[*diffs objectAtIndex:thisPointer])
-#define nextDiff ((DMDiff *)[*diffs objectAtIndex:(thisPointer + 1)])
-	
 	if(diffs == NULL || [*diffs count] == 0) {
 		return;
 	}
+	
+#define prevDiff ((DMDiff *)[*diffs objectAtIndex:(thisPointer - 1)])
+#define thisDiff ((DMDiff *)[*diffs objectAtIndex:thisPointer])
+#define nextDiff ((DMDiff *)[*diffs objectAtIndex:(thisPointer + 1)])
 	
 	NSUInteger thisPointer = 1;
 	
@@ -1026,7 +1031,7 @@ NSString *diff_prettyHTMLFromDiffs(NSArray *diffs)
 	NSMutableString *html = [NSMutableString string];
 	
 	for(DMDiff *diff in diffs) {
-		NSMutableString *diffText = [[diff.text stringByEscapingHTML] mutableCopy];
+		NSString *diffText = [diff.text stringByEscapingHTML];
 		
 		switch(diff.operation) {
 			case DIFF_INSERT:
