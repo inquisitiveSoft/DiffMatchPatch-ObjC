@@ -2415,10 +2415,10 @@ NSArray *patch_parsePatchesFromText(NSString *textline, NSError **error)
 
 #pragma mark -
 
-// JavaScript-style diff_splice function
 
 void diff_spliceTwoArrays(NSMutableArray **input, NSUInteger start, NSUInteger count, NSArray *objects)
 {
+	// A JavaScript-style diff_splice function
 	if(input == NULL)
 		return;
 	

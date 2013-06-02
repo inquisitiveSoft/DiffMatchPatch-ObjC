@@ -19,6 +19,10 @@
  * Author: fraser@google.com (Neil Fraser)
  * ObjC port: jan@geheimwerk.de (Jan Weiß)
  * Refactoring & mangling: @inquisitivesoft (Harry Jordan)
+ * 
+ * If you need more fine grained options
+ * have a look at DiffMatchPatchInternals.h
+ * 
  */
 
 

@@ -23,7 +23,12 @@
  *
  * This file contains declares the functions that DiffMatchPatch
  * uses internally. You might want to use these for more fine grained
- * properties, particularly for testing
+ * control and particularly for testing.
+ * 
+ * As a convention, functions which take an object by reference
+ * e.g. diff_cleanupSemantic(NSMutableArray **diffs) will change the
+ * objects content in some way.
+ * 
  */
 
 
@@ -109,7 +114,7 @@ NSString *patch_addPaddingToPatches(NSMutableArray **patches, PatchProperties pr
 void patch_splitMax(NSMutableArray **patches, PatchProperties properties);
 void patch_cleanupDiffsForEfficiency(NSMutableArray **diffs, PatchProperties properties);
 
-// A convenience function to splice two arrays of DMDiffs or DMPatches
+// A convenience function to splice two arrays, likely of DMDiffs or DMPatches
 void diff_spliceTwoArrays(NSMutableArray **input, NSUInteger start, NSUInteger count, NSArray *objects);
 
 
