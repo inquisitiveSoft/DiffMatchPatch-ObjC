@@ -360,16 +360,13 @@ NSMutableArray *diff_computeDiffsUsingLineMode(NSString *text1, NSString *text2,
 
 NSMutableArray *diff_bisectOfStrings(NSString *text1, NSString *text2, DiffProperties properties)
 {
-#define freeBuffers() \
-if(text1_buffer != NULL) { free(text1_buffer); } \
-if(text2_buffer != NULL) { free(text2_buffer); } \
-free(v1); \
-free(v2);
+	BOOL validDeadline = properties.deadline != [[NSDate distantFuture] timeIntervalSinceReferenceDate];
 	
-	BOOL validDeadline = (properties.deadline != [[NSDate distantFuture] timeIntervalSinceReferenceDate]);
+	NSMutableArray *diffs = nil;
+	BOOL haveFoundDiffs = FALSE;
 	
 	CFStringRef _text1 = (__bridge CFStringRef)text1;
-	CFStringRef _text2 = (__bridge CFStringRef)text2;
+	CFStringRef _text2 = (__bridge CFStringRef)text2;	
 	
 	// Cache the text lengths to prevent multiple calls.
 	CFIndex text1_length = CFStringGetLength(_text1);
@@ -448,14 +445,17 @@ free(v2);
 					CFIndex x2 = text1_length - v2[k2_offset];
 					
 					if(x1 >= x2) {
-						freeBuffers();
-						
 						// Overlap detected.
-						return diff_bisectSplitOfStrings(text1, text2, x1, y1, properties);
+						diffs = diff_bisectSplitOfStrings(text1, text2, x1, y1, properties);
+						haveFoundDiffs = TRUE;
+						break;
 					}
 				}
 			}
 		}
+		
+		if(haveFoundDiffs)
+			break;
 		
 		// Walk the reverse path one step.
 		for(CFIndex k2 = -d + k2start; k2 <= d - k2end; k2 += 2) {
@@ -494,26 +494,39 @@ free(v2);
 					x2 = text1_length - x2;
 					
 					if(x1 >= x2) {
-						freeBuffers();
-						
 						// Overlap detected.
-						return diff_bisectSplitOfStrings(text1, text2, x1, y1, properties);
+						diffs = diff_bisectSplitOfStrings(text1, text2, x1, y1, properties);
+						haveFoundDiffs = TRUE;
+						break;
 					}
 				}
 			}
 		}
+		
+		if(haveFoundDiffs)
+			break;
 	}
 	
-	freeBuffers();
+	
+	// Free buffers
+	if(text1_buffer != NULL) {
+		free(text1_buffer);
+	};
+	
+	if(text2_buffer != NULL) {
+		free(text2_buffer);
+	};
+	
+	free(v1);
+	free(v2);
+	
 	
 	// Diff took too long and hit the deadline or
 	// number of diffs equals number of characters, no commonality at all.
-	NSMutableArray *diffs = [[NSMutableArray alloc] initWithCapacity:2];
+	diffs = [[NSMutableArray alloc] initWithCapacity:2];
 	[diffs addObject:[DMDiff diffWithOperation:DIFF_DELETE andText:text1]];
 	[diffs addObject:[DMDiff diffWithOperation:DIFF_INSERT andText:text2]];
 	return diffs;
-	
-#undef freeTextBuffers
 }
 
 

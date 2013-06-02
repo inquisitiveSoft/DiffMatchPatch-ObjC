@@ -29,6 +29,9 @@
 #include <limits.h>
 
 
+#define diff_UniCharMax (~(UniChar)0x00)
+
+
 Boolean diff_regExMatch(CFStringRef text, const regex_t *re);
 CFArrayRef diff_halfMatchICreate(CFStringRef longtext, CFStringRef shorttext, CFIndex i);
 void diff_mungeHelper(CFStringRef token, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash, CFMutableStringRef chars);
@@ -394,7 +397,6 @@ CFArrayRef diff_halfMatchICreate(CFStringRef longtext, CFStringRef shorttext, CF
 
 void diff_mungeHelper(CFStringRef token, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash, CFMutableStringRef chars)
 {
-#define diff_UniCharMax (~(UniChar)0x00)
 
 	CFIndex hash;
 
@@ -409,8 +411,6 @@ void diff_mungeHelper(CFStringRef token, CFMutableArrayRef tokenArray, CFMutable
 		const UniChar hashChar = (UniChar)hash;
 		CFStringAppendCharacters(chars, &hashChar, 1);
 	}
-
-#undef diff_UniCharMax
 }
 
 
@@ -434,43 +434,36 @@ CF_INLINE void diff_mungeTokenForRange(CFStringRef text, CFRange tokenRange, CFM
 
 CFStringRef diff_linesToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef lineArray, CFMutableDictionaryRef lineHash)
 {
-#define lineStart lineStartRange.location
-#define lineEnd	  lineEndRange.location
-
 	CFRange lineStartRange;
 	CFRange lineEndRange;
-	lineStart = 0;
-	lineEnd = -1;
+	lineStartRange.location = 0;
+	lineEndRange.location = -1;
 	CFStringRef line;
 	CFMutableStringRef chars = CFStringCreateMutable(kCFAllocatorDefault, 0);
 
 	CFIndex textLength = CFStringGetLength(text);
 
-// Walk the text, pulling out a Substring for each line.
-// CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, text, CFSTR("\n")) would temporarily double our memory footprint.
-// Modifying text would create many large strings.
-	while(lineEnd < textLength - 1) {
-		lineStartRange.length = textLength - lineStart;
+	// Walk the text, pulling out a Substring for each line.
+	// CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, text, CFSTR("\n")) would temporarily double our memory footprint.
+	// Modifying text would create many large strings.
+	while(lineEndRange.location < textLength - 1) {
+		lineStartRange.length = textLength - lineStartRange.location;
 
 		if(CFStringFindWithOptions(text, CFSTR("\n"), lineStartRange, 0, &lineEndRange) == false) {
-			lineEnd = textLength - 1;
+			lineEndRange.location = textLength - 1;
 		} /* else {
-		   lineEnd = lineEndRange.location;
+		   lineEndRange.location = lineEndRange.location;
 		}*/
 
-		line = diff_CFStringCreateSubstring(text, lineStart, lineEnd + 1 - lineStart);
-		lineStart = lineEnd + 1;
-
+		line = diff_CFStringCreateSubstring(text, lineStartRange.location, lineEndRange.location + 1 - lineStartRange.location);
+		lineStartRange.location = lineEndRange.location + 1;
+		
 		diff_mungeHelper(line, lineArray, lineHash, chars);
 
 		CFRelease(line);
 	}
 
 	return chars;
-
-#undef diff_UniCharMax
-#undef lineStart
-#undef lineEnd
 }
 
 
@@ -619,7 +612,6 @@ CFStringRef diff_lineBreakDelimiteredToCharsMungeCFStringCreate(CFStringRef text
 
 CFStringRef diff_charsToTokenCFStringCreate(CFStringRef charsString, CFArrayRef tokenArray)
 {
-#define hashAtIndex(A) hash_chars[(A)]
 	CFMutableStringRef text = CFStringCreateMutable(kCFAllocatorDefault, 0);
 	CFIndex hash_count = CFStringGetLength(charsString);
 	
@@ -628,7 +620,7 @@ CFStringRef diff_charsToTokenCFStringCreate(CFStringRef charsString, CFArrayRef 
 	diff_CFStringPrepareUniCharBuffer(charsString, &hash_chars, &hash_buffer, CFRangeMake(0, hash_count) );
 	
 	for(CFIndex i = 0; i < hash_count; i++) {
-		CFIndex tokenHash = (CFIndex)hashAtIndex(i);
+		CFIndex tokenHash = hash_chars[i];
 		CFStringRef token = CFArrayGetValueAtIndex(tokenArray, tokenHash);
 		CFStringAppend(text, token);
 	}
@@ -638,7 +630,6 @@ CFStringRef diff_charsToTokenCFStringCreate(CFStringRef charsString, CFArrayRef 
 	}
 	
 	return text;
-#undef hashAtIndex
 }
 
 
