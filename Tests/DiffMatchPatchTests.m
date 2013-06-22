@@ -988,8 +988,9 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 		[DMDiff diffWithOperation:DIFF_INSERT andText:@"c&d"],
 			nil];
 	
-	NSString *expectedResult = @"<span>a&para;<br></span><del style=\"background:#ffe6e6;\">&lt;B&gt;b&lt;/B&gt;</del><ins style=\"background:#e6ffe6;\">c&amp;d</ins>";
-	STAssertEqualObjects(expectedResult, diff_prettyHTMLFromDiffs(diffs), @"Pretty print.");
+	NSString *expectedResult = @"<span>a<br>\n</span><del>&lt;B&gt;b&lt;/B&gt;</del><ins>c&amp;d</ins>";
+	NSString *actualResult = diff_prettyHTMLFromDiffs(diffs);
+	STAssertEqualObjects(expectedResult, actualResult, @"Pretty print.");
 }
 
 

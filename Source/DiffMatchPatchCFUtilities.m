@@ -29,6 +29,9 @@
 #import <limits.h>
 
 
+#define diff_UniCharMax (~(UniChar)0x00)
+
+
 Boolean diff_regExMatch(CFStringRef text, const regex_t *re);
 CFArrayRef diff_halfMatchICreate(CFStringRef longtext, CFStringRef shorttext, CFIndex i);
 void diff_mungeHelper(CFStringRef token, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash, CFMutableStringRef chars);
@@ -149,6 +152,7 @@ CFIndex diff_commonSuffix(CFStringRef text1, CFStringRef text2)
 			return i - 1;
 		}
 	}
+	
 	return numberOfCommonCharacters;
 }
 
@@ -179,6 +183,7 @@ CFIndex diff_commonOverlap(CFStringRef text1, CFStringRef text2)
 	CFStringRef text1_trunc;
 	CFStringRef text2_trunc;
 	CFIndex text1_trunc_length;
+	
 	if(text1_length > text2_length) {
 		text1_trunc_length = text2_length;
 		text1_trunc = diff_CFStringCreateRightSubstring(text1, text1_length, text1_trunc_length);
@@ -193,7 +198,6 @@ CFIndex diff_commonOverlap(CFStringRef text1, CFStringRef text2)
 	} else {
 		text1_trunc_length = text1_length;
 		text1_trunc = CFRetain(text1);
-
 		text2_trunc = CFRetain(text2);
 	}
 
@@ -372,11 +376,12 @@ CFArrayRef diff_halfMatchICreate(CFStringRef longtext, CFStringRef shorttext, CF
 	CFRelease(seed);
 
 	CFArrayRef halfMatchIArray;
-	if( CFStringGetLength(best_common) * 2 >= CFStringGetLength(longtext) ) {
+	if(CFStringGetLength(best_common) * 2 >= CFStringGetLength(longtext) ) {
 		const CFStringRef values[] = {
 			best_longtext_a,  best_longtext_b,
 			best_shorttext_a, best_shorttext_b,best_common
 		};
+		
 		halfMatchIArray = CFArrayCreate(kCFAllocatorDefault, (const void **)values, ( sizeof(values) / sizeof(values[0]) ), &kCFTypeArrayCallBacks);
 	} else {
 		halfMatchIArray = NULL;
@@ -394,11 +399,9 @@ CFArrayRef diff_halfMatchICreate(CFStringRef longtext, CFStringRef shorttext, CF
 
 void diff_mungeHelper(CFStringRef token, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash, CFMutableStringRef chars)
 {
-#define diff_UniCharMax (~(UniChar)0x00)
-
 	CFIndex hash;
-
-	if( CFDictionaryGetValueIfPresent(tokenHash, token, (const void **)&hash) ) {
+	
+	if(CFDictionaryGetValueIfPresent(tokenHash, token, (const void **)&hash) ) {
 		const UniChar hashChar = (UniChar)hash;
 		CFStringAppendCharacters(chars, &hashChar, 1);
 	} else {
@@ -409,8 +412,6 @@ void diff_mungeHelper(CFStringRef token, CFMutableArrayRef tokenArray, CFMutable
 		const UniChar hashChar = (UniChar)hash;
 		CFStringAppendCharacters(chars, &hashChar, 1);
 	}
-
-#undef diff_UniCharMax
 }
 
 
@@ -434,43 +435,34 @@ CF_INLINE void diff_mungeTokenForRange(CFStringRef text, CFRange tokenRange, CFM
 
 CFStringRef diff_linesToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef lineArray, CFMutableDictionaryRef lineHash)
 {
-#define lineStart lineStartRange.location
-#define lineEnd	  lineEndRange.location
-
 	CFRange lineStartRange;
 	CFRange lineEndRange;
-	lineStart = 0;
-	lineEnd = -1;
+	lineStartRange.location = 0;
+	lineEndRange.location = -1;
 	CFStringRef line;
 	CFMutableStringRef chars = CFStringCreateMutable(kCFAllocatorDefault, 0);
 
 	CFIndex textLength = CFStringGetLength(text);
 
-// Walk the text, pulling out a Substring for each line.
-// CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, text, CFSTR("\n")) would temporarily double our memory footprint.
-// Modifying text would create many large strings.
-	while(lineEnd < textLength - 1) {
-		lineStartRange.length = textLength - lineStart;
+	// Walk the text, pulling out a Substring for each line.
+	// CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, text, CFSTR("\n")) would temporarily double our memory footprint.
+	// Modifying text would create many large strings.
+	while(lineEndRange.location < textLength - 1) {
+		lineStartRange.length = textLength - lineStartRange.location;
 
 		if(CFStringFindWithOptions(text, CFSTR("\n"), lineStartRange, 0, &lineEndRange) == false) {
-			lineEnd = textLength - 1;
-		} /* else {
-		   lineEnd = lineEndRange.location;
-		}*/
-
-		line = diff_CFStringCreateSubstring(text, lineStart, lineEnd + 1 - lineStart);
-		lineStart = lineEnd + 1;
-
+			lineEndRange.location = textLength - 1;
+		}
+		
+		line = diff_CFStringCreateSubstring(text, lineStartRange.location, lineEndRange.location + 1 - lineStartRange.location);
+		lineStartRange.location = lineEndRange.location + 1;
+		
 		diff_mungeHelper(line, lineArray, lineHash, chars);
 
 		CFRelease(line);
 	}
 
 	return chars;
-
-#undef diff_UniCharMax
-#undef lineStart
-#undef lineEnd
 }
 
 
@@ -488,11 +480,8 @@ CFStringRef diff_tokensToCharsMungeCFStringCreate(CFStringRef text, CFMutableArr
 {
 	CFMutableStringRef chars = CFStringCreateMutable(kCFAllocatorDefault, 0);
 	CFIndex textLength = CFStringGetLength(text);
-
-// CFLocaleRef currentLocale = CFLocaleCopyCurrent();
 	CFRange tokenizerRange = CFRangeMake(0, textLength);
 	CFStringTokenizerRef tokenizer = CFStringTokenizerCreate(kCFAllocatorDefault, text, tokenizerRange, tokenizerOptions, NULL);
-// CFRelease(currentLocale);
 
 	// Set tokenizer to the start of the string.
 	CFStringTokenizerTokenType tokenType = CFStringTokenizerGoToTokenAtIndex(tokenizer, 0);
@@ -515,12 +504,11 @@ CFStringRef diff_tokensToCharsMungeCFStringCreate(CFStringRef text, CFMutableArr
 		diff_mungeTokenForRange(text, tokenRange, chars, tokenHash, tokenArray);
 
 		tokenType = CFStringTokenizerAdvanceToNextToken(tokenizer);
-
 		prevTokenRangeMax = (tokenRange.location + tokenRange.length);
 	}
 
 	CFRelease(tokenizer);
-
+	
 	return chars;
 }
 
@@ -543,7 +531,7 @@ CFStringRef diff_rangesToCharsMungeCFStringCreate(CFStringRef text, CFMutableArr
 
 	for(size_t i = 0; i < ranges_count; i++) {
 		CFRange substringRange = ranges[i];
-
+		
 		diff_mungeTokenForRange(text, substringRange, chars, substringHash, substringArray);
 	}
 
@@ -619,7 +607,6 @@ CFStringRef diff_lineBreakDelimiteredToCharsMungeCFStringCreate(CFStringRef text
 
 CFStringRef diff_charsToTokenCFStringCreate(CFStringRef charsString, CFArrayRef tokenArray)
 {
-#define hashAtIndex(A) hash_chars[(A)]
 	CFMutableStringRef text = CFStringCreateMutable(kCFAllocatorDefault, 0);
 	CFIndex hash_count = CFStringGetLength(charsString);
 	
@@ -628,7 +615,7 @@ CFStringRef diff_charsToTokenCFStringCreate(CFStringRef charsString, CFArrayRef 
 	diff_CFStringPrepareUniCharBuffer(charsString, &hash_chars, &hash_buffer, CFRangeMake(0, hash_count) );
 	
 	for(CFIndex i = 0; i < hash_count; i++) {
-		CFIndex tokenHash = (CFIndex)hashAtIndex(i);
+		CFIndex tokenHash = hash_chars[i];
 		CFStringRef token = CFArrayGetValueAtIndex(tokenArray, tokenHash);
 		CFStringAppend(text, token);
 	}
@@ -638,7 +625,6 @@ CFStringRef diff_charsToTokenCFStringCreate(CFStringRef charsString, CFArrayRef 
 	}
 	
 	return text;
-#undef hashAtIndex
 }
 
 
@@ -654,59 +640,48 @@ CFStringRef diff_charsToTokenCFStringCreate(CFStringRef charsString, CFArrayRef 
 
 CFIndex diff_cleanupSemanticScore(CFStringRef one, CFStringRef two)
 {
-	static Boolean firstRun = true;
-	static CFCharacterSetRef alphaNumericSet = NULL;
-	static CFCharacterSetRef whiteSpaceSet = NULL;
-	static CFCharacterSetRef controlSet = NULL;
-	static regex_t blankLineEndRegEx;
-	static regex_t blankLineStartRegEx;
-
-	if(firstRun) {
-		alphaNumericSet = CFCharacterSetGetPredefined(kCFCharacterSetAlphaNumeric);
-		whiteSpaceSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
-		controlSet = CFCharacterSetGetPredefined(kCFCharacterSetControl);
-
-		// Define some regex patterns for matching boundaries.
-		int status;
-		status = regcomp(&blankLineEndRegEx, "\n\r?\n$", REG_EXTENDED | REG_NOSUB);
-		NSCAssert(status == 0, @"Failed to compile the \n\r?\n$ regex");
-		status = regcomp(&blankLineStartRegEx, "^\r?\n\r?\n", REG_EXTENDED | REG_NOSUB);
-		NSCAssert(status == 0, @"Failed to compile the ^\r?\n\r?\n regex");
+	static CFCharacterSetRef diff_alphaNumericSet = NULL;
+	static CFCharacterSetRef diff_whiteSpaceSet = NULL;
+	static CFCharacterSetRef diff_controlSet = NULL;
+	static regex_t diff_blankLineEndRegEx;
+	static regex_t diff_blankLineStartRegEx;
+	
+	static dispatch_once_t setupCleanupSemanticScoreToken;
+	dispatch_once(&setupCleanupSemanticScoreToken, ^{
+		diff_alphaNumericSet = CFCharacterSetGetPredefined(kCFCharacterSetAlphaNumeric);
+		diff_whiteSpaceSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
+		diff_controlSet = CFCharacterSetGetPredefined(kCFCharacterSetControl);
 		
-		firstRun = false;
-	}
-
+		// Define some regex patterns for matching boundaries.
+		int status = regcomp(&diff_blankLineEndRegEx, "\n\r?\n$", REG_EXTENDED | REG_NOSUB);
+		NSCAssert(status == 0, @"Failed to compile the \n\r?\n$ regex");
+		
+		status = regcomp(&diff_blankLineStartRegEx, "^\r?\n\r?\n", REG_EXTENDED | REG_NOSUB);
+		NSCAssert(status == 0, @"Failed to compile the ^\r?\n\r?\n regex");
+	});
+	
 	if(CFStringGetLength(one) == 0 || CFStringGetLength(two) == 0) {
 		// Edges are the best.
 		return 6;
 	}
 
-// Each port of this function behaves slightly differently due to
-// subtle differences in each language's definition of things like
-// 'whitespace'.  Since this function's purpose is largely cosmetic,
-// the choice has been made to use each language's native features
-// rather than force total conformity.
-	UniChar char1 =
-		CFStringGetCharacterAtIndex(one, (CFStringGetLength(one) - 1) );
-	UniChar char2 =
-		CFStringGetCharacterAtIndex(two, 0);
-	Boolean nonAlphaNumeric1 =
-		!CFCharacterSetIsCharacterMember(alphaNumericSet, char1);
-	Boolean nonAlphaNumeric2 =
-		!CFCharacterSetIsCharacterMember(alphaNumericSet, char2);
-	Boolean whitespace1 =
-		nonAlphaNumeric1 && CFCharacterSetIsCharacterMember(whiteSpaceSet, char1);
-	Boolean whitespace2 =
-		nonAlphaNumeric2 && CFCharacterSetIsCharacterMember(whiteSpaceSet, char2);
-	Boolean lineBreak1 =
-		whitespace1 && CFCharacterSetIsCharacterMember(controlSet, char1);
-	Boolean lineBreak2 =
-		whitespace2 && CFCharacterSetIsCharacterMember(controlSet, char2);
-	Boolean blankLine1 =
-		lineBreak1 && diff_regExMatch(one, &blankLineEndRegEx);
-	Boolean blankLine2 =
-		lineBreak2 && diff_regExMatch(two, &blankLineStartRegEx);
-
+	// Each port of this function behaves slightly differently due to
+	// subtle differences in each language's definition of things like
+	// 'whitespace'.  Since this function's purpose is largely cosmetic,
+	// the choice has been made to use each language's native features
+	// rather than force total conformity.
+	
+	UniChar char1 = CFStringGetCharacterAtIndex(one, (CFStringGetLength(one) - 1) );
+	UniChar char2 = CFStringGetCharacterAtIndex(two, 0);
+	Boolean nonAlphaNumeric1 = !CFCharacterSetIsCharacterMember(diff_alphaNumericSet, char1);
+	Boolean nonAlphaNumeric2 = !CFCharacterSetIsCharacterMember(diff_alphaNumericSet, char2);
+	Boolean whitespace1 = nonAlphaNumeric1 && CFCharacterSetIsCharacterMember(diff_whiteSpaceSet, char1);
+	Boolean whitespace2 = nonAlphaNumeric2 && CFCharacterSetIsCharacterMember(diff_whiteSpaceSet, char2);
+	Boolean lineBreak1 = whitespace1 && CFCharacterSetIsCharacterMember(diff_controlSet, char1);
+	Boolean lineBreak2 = whitespace2 && CFCharacterSetIsCharacterMember(diff_controlSet, char2);
+	Boolean blankLine1 = lineBreak1 && diff_regExMatch(one, &diff_blankLineEndRegEx);
+	Boolean blankLine2 = lineBreak2 && diff_regExMatch(two, &diff_blankLineStartRegEx);
+	
 	if(blankLine1 || blankLine2) {
 		// Five points for blank lines.
 		return 5;
