@@ -22,11 +22,11 @@
  */
 
 
-#include <CoreFoundation/CoreFoundation.h>
-#include "DiffMatchPatchCFUtilities.h"
+#import <CoreFoundation/CoreFoundation.h>
+#import "DiffMatchPatchCFUtilities.h"
 
-#include <regex.h>
-#include <limits.h>
+#import <regex.h>
+#import <limits.h>
 
 
 Boolean diff_regExMatch(CFStringRef text, const regex_t *re);
