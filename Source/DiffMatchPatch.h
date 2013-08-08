@@ -116,7 +116,7 @@ NSArray *diff_diffsFromOriginalTextAndDelta(NSString *text1, NSString *delta, NS
  * Calculate the levenshtein distance for an array of DMDiff objects
  * See http://en.wikipedia.org/wiki/Levenshtein_distance#Definition for more info
  * 
- * @param diffs		The array of DMDiff objects.
+ * @param diffs The array of DMDiff objects.
  * @return The levenshtein score for the diffs.
  */
 

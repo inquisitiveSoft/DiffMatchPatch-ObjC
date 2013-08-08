@@ -157,8 +157,8 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 	
 	// Unlike Jan's version diff_halfMatchOfFirstString(...) no longer
 	// has a diffTimeout parameter. Instead the onus is on the caller
-	// to decide whether the trade offs of the halfMatch technique..
-	// a faster sub-optimal match is worth it.
+	// to decide whether the trade off of the halfMatch technique,
+	// a faster sub-optimal match, is worth it.
 }
 
 
@@ -1696,15 +1696,20 @@ NSArray *diff_rebuildTextsFromDiffs(NSArray *diffs);
 
 - (void)test_speedtests
 {
-	NSString *text1 = [NSString stringWithContentsOfFile:@"Speedtest1.txt" encoding:NSUTF8StringEncoding error:NULL];
-	NSString *text2 = [NSString stringWithContentsOfFile:@"Speedtest2.txt" encoding:NSUTF8StringEncoding error:NULL];
+	NSURL *testUrl1 = [[NSBundle mainBundle] URLForResource:@"Speedtest1" withExtension:@"txt"];
+	NSString *text1 = [NSString stringWithContentsOfURL:testUrl1 usedEncoding:NULL error:NULL];
+	
+	NSURL *testUrl2 = [[NSBundle mainBundle] URLForResource:@"Speedtest2" withExtension:@"txt"];
+	NSString *text2 = [NSString stringWithContentsOfURL:testUrl2 usedEncoding:NULL error:NULL];
 	
 	NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-	diff_diffsBetweenTexts(text1, text2);
+	NSArray *diffs = diff_diffsBetweenTexts(text1, text2);
 	NSTimeInterval duration = [NSDate timeIntervalSinceReferenceDate] - start;
 	
-	NSLog(@"test_speedtests: Elapsed time: %.4lf", (double)duration);
+	STAssertNotNil(diffs, @"Couldn't genereate diffs for files: %@ - %@", testUrl1, testUrl2);
+	printf("\n	diff_diffsBetweenTexts() elapsed time: %lf\n\n", duration);
 }
+
 
 
 #pragma mark Test Utility Functions

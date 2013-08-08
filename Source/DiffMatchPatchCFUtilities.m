@@ -249,7 +249,6 @@ CFIndex diff_commonOverlap(CFStringRef text1, CFStringRef text2)
  * This speedup can produce non-minimal diffs.
  * @param text1 First CFStringRef.
  * @param text2 Second CFStringRef.
- * @param diffTimeout Time limit for diff.
  * @return Five element CFStringRef array, containing the prefix of text1, the
  *     suffix of text1, the prefix of text2, the suffix of text2 and the
  *     common middle.   Or NULL if there was no match.

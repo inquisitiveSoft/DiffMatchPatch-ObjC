@@ -151,7 +151,7 @@ int compareCharacterDefinitions(void const *firstEquivalent, void const *secondE
 		}
 	}];
 	
-	return [result copy];	// Return an immutable string
+	return result;
 }
 
 

@@ -50,10 +50,26 @@
 		4A5D0C561719DC1F00DBA40A /* DMDiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D01718BBC30050A4F2 /* DMDiff.m */; };
 		4A5D0C571719DC1F00DBA40A /* DMPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D21718BBC30050A4F2 /* DMPatch.m */; };
 		4A5D0C581719DC1F00DBA40A /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D41718BBC30050A4F2 /* NSString+UriCompatibility.m */; };
-		4A92746A1720BFD600D7A46B /* Speedtest1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9274681720BFD600D7A46B /* Speedtest1.txt */; };
-		4A92746B1720BFD600D7A46B /* Speedtest2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9274691720BFD600D7A46B /* Speedtest2.txt */; };
-		4A92746C1720BFE700D7A46B /* Speedtest1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9274681720BFD600D7A46B /* Speedtest1.txt */; };
-		4A92746D1720BFE700D7A46B /* Speedtest2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9274691720BFD600D7A46B /* Speedtest2.txt */; };
+		4A776A1517B3B5030049FFA7 /* Speedtest1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A776A1317B3B5030049FFA7 /* Speedtest1.txt */; };
+		4A776A1617B3B5030049FFA7 /* Speedtest1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A776A1317B3B5030049FFA7 /* Speedtest1.txt */; };
+		4A776A1717B3B5030049FFA7 /* Speedtest2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A776A1417B3B5030049FFA7 /* Speedtest2.txt */; };
+		4A776A1817B3B5030049FFA7 /* Speedtest2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A776A1417B3B5030049FFA7 /* Speedtest2.txt */; };
+		4A776A1B17B3BD5A0049FFA7 /* TestUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A776A1A17B3BD5A0049FFA7 /* TestUtilities.m */; };
+		4A776A1C17B3BE170049FFA7 /* DiffMatchPatch.h in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56CA1718BBC30050A4F2 /* DiffMatchPatch.h */; };
+		4A776A1D17B3BE170049FFA7 /* DiffMatchPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56CB1718BBC30050A4F2 /* DiffMatchPatch.m */; };
+		4A776A1E17B3BE170049FFA7 /* DiffMatchPatchInternals.h in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56CE1718BBC30050A4F2 /* DiffMatchPatchInternals.h */; };
+		4A776A1F17B3BE170049FFA7 /* DiffMatchPatchCFUtilities.h in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56CC1718BBC30050A4F2 /* DiffMatchPatchCFUtilities.h */; };
+		4A776A2017B3BE170049FFA7 /* DiffMatchPatchCFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56CD1718BBC30050A4F2 /* DiffMatchPatchCFUtilities.m */; };
+		4A776A2117B3BE170049FFA7 /* DMDiff.h in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56CF1718BBC30050A4F2 /* DMDiff.h */; };
+		4A776A2217B3BE170049FFA7 /* DMDiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D01718BBC30050A4F2 /* DMDiff.m */; };
+		4A776A2317B3BE170049FFA7 /* DMPatch.h in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D11718BBC30050A4F2 /* DMPatch.h */; };
+		4A776A2417B3BE170049FFA7 /* DMPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D21718BBC30050A4F2 /* DMPatch.m */; };
+		4A776A2517B3BE170049FFA7 /* NSString+UriCompatibility.h in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D31718BBC30050A4F2 /* NSString+UriCompatibility.h */; };
+		4A776A2617B3BE170049FFA7 /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B56D41718BBC30050A4F2 /* NSString+UriCompatibility.m */; };
+		4A776A2717B3BE170049FFA7 /* NSString+EscapeHTMLCharacters.h in Sources */ = {isa = PBXBuildFile; fileRef = 4A4FB4D8175AD35600E84A45 /* NSString+EscapeHTMLCharacters.h */; };
+		4A776A2817B3BE170049FFA7 /* NSString+EscapeHTMLCharacters.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A4FB4D9175AD35600E84A45 /* NSString+EscapeHTMLCharacters.m */; };
+		4A776A2A17B3BE380049FFA7 /* speedtest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A776A2917B3BE380049FFA7 /* speedtest.m */; };
+		4A776A2B17B3BE9E0049FFA7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4B55AC1718B09B0050A4F2 /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +88,18 @@
 			remoteInfo = "DiffMatchPatch iOS";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4A776A0117B3B41E0049FFA7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4A4B55AC1718B09B0050A4F2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -121,8 +149,14 @@
 		4A4B56D41718BBC30050A4F2 /* NSString+UriCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+UriCompatibility.m"; path = "Source/NSString+UriCompatibility.m"; sourceTree = "<group>"; };
 		4A4FB4D8175AD35600E84A45 /* NSString+EscapeHTMLCharacters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+EscapeHTMLCharacters.h"; path = "Source/NSString+EscapeHTMLCharacters.h"; sourceTree = "<group>"; };
 		4A4FB4D9175AD35600E84A45 /* NSString+EscapeHTMLCharacters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+EscapeHTMLCharacters.m"; path = "Source/NSString+EscapeHTMLCharacters.m"; sourceTree = "<group>"; };
-		4A9274681720BFD600D7A46B /* Speedtest1.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Speedtest1.txt; path = Tests/Speedtest1.txt; sourceTree = "<group>"; };
-		4A9274691720BFD600D7A46B /* Speedtest2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Speedtest2.txt; path = Tests/Speedtest2.txt; sourceTree = "<group>"; };
+		4A776A0317B3B41E0049FFA7 /* speedtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = speedtest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A776A0F17B3B44F0049FFA7 /* speedtest-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "speedtest-Prefix.pch"; path = "Tests/speedtest/speedtest-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		4A776A1117B3B45D0049FFA7 /* speedtest.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = speedtest.1; path = Tests/speedtest/speedtest.1; sourceTree = SOURCE_ROOT; };
+		4A776A1317B3B5030049FFA7 /* Speedtest1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Speedtest1.txt; path = Tests/speedtest/Speedtest1.txt; sourceTree = "<group>"; };
+		4A776A1417B3B5030049FFA7 /* Speedtest2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Speedtest2.txt; path = Tests/speedtest/Speedtest2.txt; sourceTree = "<group>"; };
+		4A776A1917B3BD5A0049FFA7 /* TestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestUtilities.h; path = Tests/speedtest/TestUtilities.h; sourceTree = SOURCE_ROOT; };
+		4A776A1A17B3BD5A0049FFA7 /* TestUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestUtilities.m; path = Tests/speedtest/TestUtilities.m; sourceTree = SOURCE_ROOT; };
+		4A776A2917B3BE380049FFA7 /* speedtest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = speedtest.m; path = Tests/speedtest/speedtest.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +197,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4A776A0017B3B41E0049FFA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A776A2B17B3BE9E0049FFA7 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -183,6 +225,7 @@
 				4A4B55FD1718B17F0050A4F2 /* DiffMatchPatch Mac Tests.octest */,
 				4A4B56761718B7860050A4F2 /* DiffMatchPatch iOS.app */,
 				4A4B56911718B7860050A4F2 /* DiffMatchPatch iOS Tests.octest */,
+				4A776A0317B3B41E0049FFA7 /* speedtest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -255,12 +298,13 @@
 			children = (
 				4A4B56271718B5E70050A4F2 /* DiffMatchPatchTests.h */,
 				4A4B56281718B5E70050A4F2 /* DiffMatchPatchTests.m */,
-				4A9274681720BFD600D7A46B /* Speedtest1.txt */,
-				4A9274691720BFD600D7A46B /* Speedtest2.txt */,
+				4A776A1317B3B5030049FFA7 /* Speedtest1.txt */,
+				4A776A1417B3B5030049FFA7 /* Speedtest2.txt */,
 				4A4B55E61718B17F0050A4F2 /* DiffMatchPatch Mac */,
 				4A4B56021718B17F0050A4F2 /* DiffMatchPatch Mac Tests */,
 				4A4B567A1718B7860050A4F2 /* DiffMatchPatch iOS */,
 				4A4B56971718B7870050A4F2 /* DiffMatchPatch iOS Tests */,
+				4A776A0517B3B41F0049FFA7 /* speedtest */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -323,6 +367,26 @@
 			children = (
 				4A4B56C31718BA650050A4F2 /* DiffMatchPatch iOS Tests-Info.plist */,
 				4A4B56C01718B9D10050A4F2 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4A776A0517B3B41F0049FFA7 /* speedtest */ = {
+			isa = PBXGroup;
+			children = (
+				4A776A2917B3BE380049FFA7 /* speedtest.m */,
+				4A776A1117B3B45D0049FFA7 /* speedtest.1 */,
+				4A776A1917B3BD5A0049FFA7 /* TestUtilities.h */,
+				4A776A1A17B3BD5A0049FFA7 /* TestUtilities.m */,
+				4A776A0817B3B41F0049FFA7 /* Supporting Files */,
+			);
+			path = speedtest;
+			sourceTree = "<group>";
+		};
+		4A776A0817B3B41F0049FFA7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4A776A0F17B3B44F0049FFA7 /* speedtest-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -402,6 +466,23 @@
 			productReference = 4A4B56911718B7860050A4F2 /* DiffMatchPatch iOS Tests.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
+		4A776A0217B3B41E0049FFA7 /* speedtest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A776A0C17B3B41F0049FFA7 /* Build configuration list for PBXNativeTarget "speedtest" */;
+			buildPhases = (
+				4A7769FF17B3B41E0049FFA7 /* Sources */,
+				4A776A0017B3B41E0049FFA7 /* Frameworks */,
+				4A776A0117B3B41E0049FFA7 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = speedtest;
+			productName = speedtest;
+			productReference = 4A776A0317B3B41E0049FFA7 /* speedtest */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -426,6 +507,7 @@
 				4A4B55FC1718B17F0050A4F2 /* DiffMatchPatch Mac Tests */,
 				4A4B56751718B7860050A4F2 /* DiffMatchPatch iOS */,
 				4A4B56901718B7860050A4F2 /* DiffMatchPatch iOS Tests */,
+				4A776A0217B3B41E0049FFA7 /* speedtest */,
 			);
 		};
 /* End PBXProject section */
@@ -437,7 +519,9 @@
 			files = (
 				4A4B56171718B50A0050A4F2 /* MainMenu.xib in Resources */,
 				4A4B561C1718B5140050A4F2 /* Credits.rtf in Resources */,
+				4A776A1517B3B5030049FFA7 /* Speedtest1.txt in Resources */,
 				4A4B561D1718B5140050A4F2 /* InfoPlist.strings in Resources */,
+				4A776A1717B3B5030049FFA7 /* Speedtest2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,8 +530,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A4B56261718B59A0050A4F2 /* InfoPlist.strings in Resources */,
-				4A92746A1720BFD600D7A46B /* Speedtest1.txt in Resources */,
-				4A92746B1720BFD600D7A46B /* Speedtest2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,8 +539,10 @@
 			files = (
 				4A4B56B61718B8820050A4F2 /* Default-568h@2x.png in Resources */,
 				4A4B56B71718B8820050A4F2 /* Default.png in Resources */,
+				4A776A1617B3B5030049FFA7 /* Speedtest1.txt in Resources */,
 				4A4B56B81718B8820050A4F2 /* Default@2x.png in Resources */,
 				4A4B56BB1718B8AB0050A4F2 /* InfoPlist.strings in Resources */,
+				4A776A1817B3B5030049FFA7 /* Speedtest2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,8 +551,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A4B56C21718B9D10050A4F2 /* InfoPlist.strings in Resources */,
-				4A92746C1720BFE700D7A46B /* Speedtest1.txt in Resources */,
-				4A92746D1720BFE700D7A46B /* Speedtest2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,6 +636,28 @@
 				4A5D0C571719DC1F00DBA40A /* DMPatch.m in Sources */,
 				4A5D0C581719DC1F00DBA40A /* NSString+UriCompatibility.m in Sources */,
 				4A4FB4DD175AD35600E84A45 /* NSString+EscapeHTMLCharacters.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A7769FF17B3B41E0049FFA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A776A1B17B3BD5A0049FFA7 /* TestUtilities.m in Sources */,
+				4A776A1C17B3BE170049FFA7 /* DiffMatchPatch.h in Sources */,
+				4A776A1D17B3BE170049FFA7 /* DiffMatchPatch.m in Sources */,
+				4A776A1E17B3BE170049FFA7 /* DiffMatchPatchInternals.h in Sources */,
+				4A776A2A17B3BE380049FFA7 /* speedtest.m in Sources */,
+				4A776A1F17B3BE170049FFA7 /* DiffMatchPatchCFUtilities.h in Sources */,
+				4A776A2017B3BE170049FFA7 /* DiffMatchPatchCFUtilities.m in Sources */,
+				4A776A2117B3BE170049FFA7 /* DMDiff.h in Sources */,
+				4A776A2217B3BE170049FFA7 /* DMDiff.m in Sources */,
+				4A776A2317B3BE170049FFA7 /* DMPatch.h in Sources */,
+				4A776A2417B3BE170049FFA7 /* DMPatch.m in Sources */,
+				4A776A2517B3BE170049FFA7 /* NSString+UriCompatibility.h in Sources */,
+				4A776A2617B3BE170049FFA7 /* NSString+UriCompatibility.m in Sources */,
+				4A776A2717B3BE170049FFA7 /* NSString+EscapeHTMLCharacters.h in Sources */,
+				4A776A2817B3BE170049FFA7 /* NSString+EscapeHTMLCharacters.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -939,6 +1043,90 @@
 			};
 			name = Release;
 		};
+		4A776A0D17B3B41F0049FFA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tests/speedtest/speedtest-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4A776A0E17B3B41F0049FFA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tests/speedtest/speedtest-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -986,6 +1174,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		4A776A0C17B3B41F0049FFA7 /* Build configuration list for PBXNativeTarget "speedtest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A776A0D17B3B41F0049FFA7 /* Debug */,
+				4A776A0E17B3B41F0049FFA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
