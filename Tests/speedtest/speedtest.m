@@ -29,7 +29,7 @@
 void diff_measureTimeForDiff(NSString *text1, NSString *text2, NSString *aDescription)
 {
 	NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-	NSArray *diffs = diff_diffsBetweenTextsWithOptions(text1, text2, YES, 0.0);
+	NSArray *diffs = diff_diffsBetweenTextsWithOptions(text1, text2, FALSE, 0.0);
 	NSTimeInterval duration = [NSDate timeIntervalSinceReferenceDate] - start;
 	
 	if(diffs.count > 0) {
