@@ -41,11 +41,13 @@ NSArray *diff_diffsBetweenTexts(NSString *text1, NSString *text2);
 
 
 /**
- * Find the differences between two texts.
+ * Find the differences between two texts, with a few options
  * 
  * @param text1			Old NSString to be diffed.
  * @param text2			New NSString to be diffed.
  * @param highQuality	Set to FALSE for a faster but less optimal diff
+ *						Setting this to high quality will be around 2 to 3 times slower
+ *
  * @param timeLimit		The number in seconds (from the current time) to allow the function to process the diff.
  *						Enter 0.0 to allow the function an unlimited period.
  *
@@ -70,7 +72,7 @@ NSString *diff_text1(NSArray *diffs);
 
 
 /**
- * Calculate the first text from an array of DMDiff objects
+ * Calculate the second text from an array of DMDiff objects
  * 
  * @param diffs		The array of DMDiff objects.
  * @return Returns the first text
