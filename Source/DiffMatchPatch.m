@@ -552,7 +552,7 @@ NSMutableArray *diff_bisectOfStrings(NSString *text1, NSString *text2, DiffPrope
 	
 	// Compute both diffs serially.
 	NSMutableArray *diffs = diff_diffsBetweenTextsWithProperties(text1a, text2a, properties);
-	NSMutableArray *diffsb = diff_diffsBetweenTextsWithProperties(text1b, text2b, properties);;
+	NSMutableArray *diffsb = diff_diffsBetweenTextsWithProperties(text1b, text2b, properties);
 	
 	[diffs addObjectsFromArray:diffsb];
 	return diffs;
