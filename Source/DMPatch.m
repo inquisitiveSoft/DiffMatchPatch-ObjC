@@ -135,8 +135,9 @@
 
 - (void)addContext:(NSString *)text withMargin:(NSInteger)patchMargin maximumBits:(NSUInteger)maximumBits
 {
-	if(text.length == 0)
+	if(text.length == 0) {
 		return;
+	}
 	
 	NSString *pattern = [text substringWithRange:NSMakeRange(self.start2, self.length1)];
 	NSUInteger padding = 0;

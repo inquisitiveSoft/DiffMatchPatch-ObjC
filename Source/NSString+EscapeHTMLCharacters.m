@@ -113,8 +113,9 @@ int compareCharacterDefinitions(void const *firstEquivalent, void const *secondE
 				
 				[result appendString:@"&nbsp;"];
 				previousCharacterIsEscapedWhiteSpace = TRUE;
-			} else
+			} else {
 				[result appendString:@" "];
+			}
 			
 			previousCharacterIsWhiteSpace = TRUE;
 		} else {

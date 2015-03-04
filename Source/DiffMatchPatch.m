@@ -89,8 +89,9 @@ NSArray *diff_diffsBetweenTexts(NSString *text1, NSString *text2)
 NSArray *diff_diffsBetweenTextsWithOptions(NSString *text1, NSString *text2, BOOL highQuality, NSTimeInterval timeLimit)
 {
 	timeLimit = MAX(0.0, timeLimit);
-	if(timeLimit > 0.0)
+	if(timeLimit > 0.0) {
 		timeLimit = [NSDate timeIntervalSinceReferenceDate] + timeLimit;
+	}
 	
 	DiffProperties properties = diff_defaultDiffProperties();
 	properties.checkLines = !highQuality;
@@ -454,8 +455,9 @@ NSMutableArray *diff_bisectOfStrings(NSString *text1, NSString *text2, DiffPrope
 			}
 		}
 		
-		if(haveFoundDiffs)
+		if(haveFoundDiffs) {
 			break;
+		}
 		
 		// Walk the reverse path one step.
 		for(CFIndex k2 = -d + k2start; k2 <= d - k2end; k2 += 2) {
@@ -502,8 +504,9 @@ NSMutableArray *diff_bisectOfStrings(NSString *text1, NSString *text2, DiffPrope
 			}
 		}
 		
-		if(haveFoundDiffs)
+		if(haveFoundDiffs) {
 			break;
+		}
 	}
 	
 	
@@ -659,8 +662,9 @@ NSArray *diff_tokensToCharsForStrings(NSString *text1, NSString *text2, DiffToke
 
 void diff_charsToLines(NSArray **diffs, NSArray *lineArray)
 {
-	if(diffs == NULL)
+	if(diffs == NULL) {
 		return;
+	}
 	
 	for(DMDiff *diff in *diffs) {
 		diff.text = (__bridge_transfer NSString *)diff_charsToTokenCFStringCreate((__bridge CFStringRef)diff.text, (__bridge CFArrayRef)lineArray);
@@ -677,8 +681,9 @@ void diff_charsToLines(NSArray **diffs, NSArray *lineArray)
 
 void diff_charsToTokens(NSArray **diffs, NSArray *tokenArray)
 {
-	if(diffs == NULL)
+	if(diffs == NULL) {
 		return;
+	}
 	
 	for(DMDiff *diff in *diffs) {
 		diff.text = (__bridge_transfer NSString *)diff_charsToTokenCFStringCreate((__bridge CFStringRef)diff.text, (__bridge CFArrayRef)tokenArray);
@@ -2054,8 +2059,9 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
 	// Strip the padding.
 	text = [mutableText substringWithRange:NSMakeRange(nullPadding.length, mutableText.length - 2 * nullPadding.length)];
 	
-	if(indexesOfAppliedPatches != NULL)
+	if(indexesOfAppliedPatches != NULL) {
 		*indexesOfAppliedPatches = appliedPatches;
+	}
 	
 	return text;
 }
@@ -2069,8 +2075,9 @@ NSString *patch_applyPatchesToTextWithProperties(NSArray *sourcePatches, NSStrin
  */
 NSString *patch_addPaddingToPatches(NSMutableArray **patches, PatchProperties properties)
 {
-	if(patches == NULL || [*patches count] == 0)
+	if(patches == NULL || [*patches count] == 0) {
 		return nil;
+	}
 	
 	uint16_t paddingLength = properties.patchMargin;
 	NSMutableString *nullPadding = [NSMutableString string];
@@ -2137,9 +2144,10 @@ NSString *patch_addPaddingToPatches(NSMutableArray **patches, PatchProperties pr
  */
 void patch_splitMax(NSMutableArray **patches, PatchProperties properties)
 {
-	if(patches == NULL)
+	if(patches == NULL) {
 		return;
-
+	}
+	
 	NSUInteger patch_size = properties.matchProperties.matchMaximumBits;
 	NSUInteger numberOfPatches = [*patches count];
 	
@@ -2419,8 +2427,9 @@ NSArray *patch_parsePatchesFromText(NSString *textline, NSError **error)
 void diff_spliceTwoArrays(NSMutableArray **input, NSUInteger start, NSUInteger count, NSArray *objects)
 {
 	// A JavaScript-style diff_splice function
-	if(input == NULL)
+	if(input == NULL) {
 		return;
+	}
 	
 	NSRange deletionRange = NSMakeRange(start, count);
 	
