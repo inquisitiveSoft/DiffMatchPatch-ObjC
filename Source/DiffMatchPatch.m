@@ -122,7 +122,7 @@ NSMutableArray *diff_diffsBetweenTextsWithProperties(NSString *text1, NSString *
 	
 	
 	// Test if the deadline is zero or has already passed
-	if(fabsf(properties.deadline) < 0.00000001) {
+	if(fabs(properties.deadline) < 0.00000001) {
 		properties.deadline = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
 	} else {
 		NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
