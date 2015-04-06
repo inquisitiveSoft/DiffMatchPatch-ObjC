@@ -26,6 +26,9 @@
  */
 
 
+@import Foundation;
+
+
 #pragma mark -
 #pragma mark Generating Diffs
 
@@ -153,7 +156,7 @@ NSUInteger match_locationOfMatchInText(NSString *text, NSString *pattern, NSUInt
  * @return Index of the best match or NSNotFound.
  */
 
-NSUInteger match_locationOfMatchInTextWithOptions(NSString *text, NSString *pattern, NSUInteger approximateLocation, CGFloat matchThreshold, NSUInteger matchDistance);
+NSUInteger match_locationOfMatchInTextWithOptions(NSString *text, NSString *pattern, NSUInteger approximateLocation, double matchThreshold, NSUInteger matchDistance);
 
 
 #pragma mark -

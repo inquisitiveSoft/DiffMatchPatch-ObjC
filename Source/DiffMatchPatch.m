@@ -1506,7 +1506,7 @@ NSUInteger match_locationOfMatchInText(NSString *text, NSString *pattern, NSUInt
 }
 
 
-NSUInteger match_locationOfMatchInTextWithOptions(NSString *text, NSString *pattern, NSUInteger approximateLocation, CGFloat matchThreshold, NSUInteger matchDistance)
+NSUInteger match_locationOfMatchInTextWithOptions(NSString *text, NSString *pattern, NSUInteger approximateLocation, double matchThreshold, NSUInteger matchDistance)
 {
 	MatchProperties properties = match_defaultMatchProperties();
 	properties.matchThreshold = matchThreshold;

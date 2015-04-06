@@ -22,6 +22,8 @@
  */
 
 
+@import Foundation;
+
 
 CF_INLINE CFStringRef diff_CFStringCreateSubstring(CFStringRef text, CFIndex start_index, CFIndex length)
 {

@@ -31,6 +31,8 @@
  * 
  */
 
+@import Foundation;
+
 
 // Structs which are used internally to define properties
 
@@ -43,7 +45,7 @@ typedef struct DiffProperties DiffProperties;
 
 
 struct MatchProperties {
-	CGFloat matchThreshold;
+	double matchThreshold;
 	NSUInteger matchDistance;
 	NSUInteger matchMaximumBits;	// The number of bits in an int
 };
@@ -55,8 +57,8 @@ struct PatchProperties {
 	DiffProperties diffProperties;
 	MatchProperties matchProperties;
 	
-	CGFloat patchMargin;
-	CGFloat patchDeleteThreshold;
+	double patchMargin;
+	double patchDeleteThreshold;
 	NSUInteger diffEditingCost;
 };
 

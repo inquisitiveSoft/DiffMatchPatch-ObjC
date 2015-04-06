@@ -33,14 +33,15 @@
  */
 
 
+@import Foundation;
+
+
 typedef enum {
 	DIFF_DELETE = 1,
 	DIFF_INSERT = 2,
 	DIFF_EQUAL = 3
 } DMDiffOperation;
 
-
-#import <Foundation/Foundation.h>
 
 @interface DMDiff :NSObject <NSCopying> {
 }

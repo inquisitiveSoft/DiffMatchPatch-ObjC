@@ -22,7 +22,7 @@
  */
 
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 
 @interface DMPatch : NSObject <NSCopying> {

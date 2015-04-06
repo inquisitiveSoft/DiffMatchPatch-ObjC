@@ -20,6 +20,8 @@
  * in fact the mapOfHTMLEquivalentsForCharacters table is a directly copy
  */
 
+@import Foundation;
+
 
 @interface NSString (DMEscapeHTMLCharacters)
 
