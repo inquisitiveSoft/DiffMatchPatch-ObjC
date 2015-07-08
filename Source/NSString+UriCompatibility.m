@@ -35,7 +35,10 @@
  */
 - (NSString *)encodedURIString
 {
-	return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, CFSTR(" !~*'();/?:@&=+$,#"), NULL, kCFStringEncodingUTF8);
+	NSMutableCharacterSet *characterSet = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+	[characterSet addCharactersInString:@" !~*'();/?:@&=+$,#"];
+	
+	return [self stringByAddingPercentEncodingWithAllowedCharacters:characterSet];
 }
 
 /**
@@ -47,7 +50,7 @@
  */
 - (NSString *)decodedURIString
 {
-	return (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (CFStringRef)self, CFSTR(""), kCFStringEncodingUTF8);
+	return [self stringByRemovingPercentEncoding];
 }
 
 @end
