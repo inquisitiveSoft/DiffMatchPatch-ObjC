@@ -990,6 +990,7 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1034,6 +1035,7 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
