@@ -22,8 +22,8 @@
  */
 
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface DiffMatchPatchTests : SenTestCase
+@interface DiffMatchPatchTests : XCTestCase
 
 @end
