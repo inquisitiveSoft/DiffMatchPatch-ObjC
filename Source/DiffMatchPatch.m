@@ -769,7 +769,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 					
 					indexOfCurrentDiff = indexOfCurrentDiff - count_delete - count_insert +
 					(count_delete != 0 ? 1 : 0) + (count_insert != 0 ? 1 : 0) + 1;
-				} else if(indexOfCurrentDiff != 0 && [diffs[indexOfCurrentDiff - 1] operation] == DIFF_EQUAL) {
+				} else if(indexOfCurrentDiff != 0 && ((DMDiff *)diffs[indexOfCurrentDiff - 1]).operation == DIFF_EQUAL) {
 					// Merge this equality with the previous one.
 					DMDiff *prevDiff = diffs[indexOfCurrentDiff - 1];
 					prevDiff.text = [prevDiff.text stringByAppendingString:thisDiff.text];
