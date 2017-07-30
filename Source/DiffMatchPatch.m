@@ -704,7 +704,7 @@ void diff_cleanupMerge(NSMutableArray **inputDiffs)
 		return;
 	}
 	
-	NSMutableArray *diffs = *inputDiffs;
+	NSMutableArray <DMDiff *> *diffs = *inputDiffs;
 	[diffs addObject:[DMDiff diffWithOperation:DIFF_EQUAL andText:@""]];	// Add a dummy entry at the end.
 	
 	NSUInteger indexOfCurrentDiff = 0;
