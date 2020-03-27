@@ -74,9 +74,9 @@ typedef enum {
 
 
 // Define default properties
-DiffProperties diff_defaultDiffProperties();
-MatchProperties match_defaultMatchProperties();
-PatchProperties patch_defaultPatchProperties();
+DiffProperties diff_defaultDiffProperties(void);
+MatchProperties match_defaultMatchProperties(void);
+PatchProperties patch_defaultPatchProperties(void);
 
 
 // Internal functions for diffing
